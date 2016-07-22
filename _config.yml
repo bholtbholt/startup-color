@@ -1,0 +1,6 @@
+# Site settings
+title: Startup Colour | Quickly Brand Your Startup!
+description: A wizard to help decide what colour your startup brand should use
+
+# Build settings
+markdown: kramdown
