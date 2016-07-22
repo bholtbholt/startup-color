@@ -1,0 +1,56 @@
+html {
+  background-color: $red;
+  transition: background-color 3s ease;
+  color: $white;
+}
+
+.elm-wrapper {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: $font-size;
+  line-height: $line-height;
+  height: 100%;
+  margin: 0 auto;
+
+  @media screen and (min-width: $breakpoint-md) {
+    width: 80%;
+  }
+  @media screen and (min-width: $breakpoint-lg) {
+    width: 70%;
+  }
+
+}
+
+section {
+  padding: $margin;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h2,
+.h2 {
+  font-size: $font-size-xl;
+  font-weight: $font-bold;
+  margin-bottom: $margin;
+  line-height: $line-height-sm;
+}
+
+.multi-column {
+  @media screen and (min-width: $breakpoint-sm) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.multi-column label {
+  display: block;
+
+  @media screen and (min-width: $breakpoint-sm) {
+    flex: 0 1 50%;
+  }
+  @media screen and (min-width: $breakpoint-md) {
+    flex: 0 1 33%;
+  }
+}
+

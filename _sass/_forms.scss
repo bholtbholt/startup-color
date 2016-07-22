@@ -1,0 +1,19 @@
+input[type="text"] {
+  border-radius: $border-radius-lg;
+  padding: $margin-sm;
+  border: 1px solid transparent;
+  font-size: $font-size;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 1px 1px transparent;
+  }
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  margin-right: $margin-sm;
+  font-size: $font-size;
+}

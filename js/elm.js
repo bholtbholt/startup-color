@@ -7808,8 +7808,6 @@ var _user$project$Main$view = function (model) {
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(model)),
 				A3(_user$project$TextInput$view, 'What is your startup name?', model.name, _user$project$Main$UpdateName),
 				A3(_user$project$TextInput$view, 'Where are you located?', model.location, _user$project$Main$UpdateLocation),
 				A3(_user$project$TextInput$view, 'Who are your users?', model.market, _user$project$Main$UpdateMarket),

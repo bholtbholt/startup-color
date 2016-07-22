@@ -46,8 +46,7 @@ type Description
 
 view model =
   div [ class "elm-wrapper" ]
-    [ text (toString model)
-    , TextInput.view "What is your startup name?" model.name UpdateName
+    [ TextInput.view "What is your startup name?" model.name UpdateName
     , TextInput.view "Where are you located?" model.location UpdateLocation
     , TextInput.view "Who are your users?" model.market UpdateMarket
     , section []

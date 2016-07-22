@@ -22,20 +22,28 @@ $columns: 12;
 //  ~Color ~Variables
 // =====================================================
 
+$green: #88b840;
+$yellow: #fec90b;
+$blue: #0098DB;
+$orange: #ef8120;
+$purple: #9c205f;
+$red: #ed542b;
+$white: #fff;
 
 
 // =====================================================
 //  ~Font ~Variables
 // =====================================================
 
-$font-medium: 400;
-$font-bold: 500;
-$font-extra-bold: 700;
-$font-size: 12px;
-$font-size-sm: 10px;
-$font-size-lg: 14px;
-$font-size-xl: 16px;
+$font-bold: bold;
 
+$font-size: 18px;
+$font-size-sm: 14px;
+$font-size-lg: 24px;
+$font-size-xl: 32px;
+
+$line-height: 1.6;
+$line-height-sm: 1.2;
 
 
 // =====================================================
@@ -52,16 +60,14 @@ $border-radius-round: 50%;
 //  ~@media ~Breakpoint ~Variables
 // =====================================================
 
-$breakpoint-min-sm: 768px;
-$breakpoint-max-sm: 767px;
-$breakpoint-min-md: 992px;
-$breakpoint-max-md: 991px;
-$breakpoint-max-lg: 1199px;
-$breakpoint-min-lg: 1200px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
 
 
 
 
 @import "reset";
-@import "base";
+@import "layout";
+@import "forms";
 @import "utilities";
