@@ -7684,7 +7684,9 @@ var _user$project$TextInput$view = F3(
 					A2(
 					_elm_lang$html$Html$label,
 					_elm_lang$core$Native_List.fromArray(
-						[]),
+						[
+							_elm_lang$html$Html_Attributes$class('block h2')
+						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
 							_elm_lang$html$Html$text(inputLabel)
@@ -7693,6 +7695,7 @@ var _user$project$TextInput$view = F3(
 					_elm_lang$html$Html$input,
 					_elm_lang$core$Native_List.fromArray(
 						[
+							_elm_lang$html$Html_Attributes$type$('text'),
 							_elm_lang$html$Html_Attributes$value(inputValue),
 							_elm_lang$html$Html_Events$onInput(action)
 						]),
@@ -7800,7 +7803,9 @@ var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
-			[]),
+			[
+				_elm_lang$html$Html_Attributes$class('elm-wrapper')
+			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
 				_elm_lang$html$Html$text(
@@ -7822,8 +7827,17 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('Are you revolutionary?')
 							])),
-						A4(_user$project$RadioInput$view, 'Yes', 'revolutionary', _user$project$Main$Yes, _user$project$Main$UpdateRevolutionary),
-						A4(_user$project$RadioInput$view, 'No', 'revolutionary', _user$project$Main$No, _user$project$Main$UpdateRevolutionary)
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('multi-column')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A4(_user$project$RadioInput$view, 'Yes', 'revolutionary', _user$project$Main$Yes, _user$project$Main$UpdateRevolutionary),
+								A4(_user$project$RadioInput$view, 'No', 'revolutionary', _user$project$Main$No, _user$project$Main$UpdateRevolutionary)
+							]))
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -7839,9 +7853,18 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('What fields are you disrupting?')
 							])),
-						_user$project$CheckboxInput$view('Advertising'),
-						_user$project$CheckboxInput$view('Travel'),
-						_user$project$CheckboxInput$view('Utilities')
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('multi-column')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_user$project$CheckboxInput$view('Advertising'),
+								_user$project$CheckboxInput$view('Travel'),
+								_user$project$CheckboxInput$view('Utilities')
+							]))
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -7857,90 +7880,99 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('Describe your startup:')
 							])),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Airbnb but for ', model.market),
-						'description',
-						_user$project$Main$Airbnb,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Amazon but for ', model.market),
-						'description',
-						_user$project$Main$Amazon,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Dropbox but for ', model.market),
-						'description',
-						_user$project$Main$Dropbox,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Facebook but for ', model.market),
-						'description',
-						_user$project$Main$Facebook,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Google but for ', model.market),
-						'description',
-						_user$project$Main$Google,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Instagram but for ', model.market),
-						'description',
-						_user$project$Main$Instagram,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Linkedin but for ', model.market),
-						'description',
-						_user$project$Main$Linkedin,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Netflix but for ', model.market),
-						'description',
-						_user$project$Main$Netflix,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Pinterest but for ', model.market),
-						'description',
-						_user$project$Main$Pinterest,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Slack but for ', model.market),
-						'description',
-						_user$project$Main$Slack,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Snapchat but for ', model.market),
-						'description',
-						_user$project$Main$Snapchat,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Spotify but for ', model.market),
-						'description',
-						_user$project$Main$Spotify,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Stripe but for ', model.market),
-						'description',
-						_user$project$Main$Stripe,
-						_user$project$Main$UpdateDescription),
-						A4(
-						_user$project$RadioInput$view,
-						A2(_elm_lang$core$Basics_ops['++'], 'Uber but for ', model.market),
-						'description',
-						_user$project$Main$Uber,
-						_user$project$Main$UpdateDescription)
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('multi-column')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Airbnb but for ', model.market),
+								'description',
+								_user$project$Main$Airbnb,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Amazon but for ', model.market),
+								'description',
+								_user$project$Main$Amazon,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Dropbox but for ', model.market),
+								'description',
+								_user$project$Main$Dropbox,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Facebook but for ', model.market),
+								'description',
+								_user$project$Main$Facebook,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Google but for ', model.market),
+								'description',
+								_user$project$Main$Google,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Instagram but for ', model.market),
+								'description',
+								_user$project$Main$Instagram,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Linkedin but for ', model.market),
+								'description',
+								_user$project$Main$Linkedin,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Netflix but for ', model.market),
+								'description',
+								_user$project$Main$Netflix,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Pinterest but for ', model.market),
+								'description',
+								_user$project$Main$Pinterest,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Slack but for ', model.market),
+								'description',
+								_user$project$Main$Slack,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Snapchat but for ', model.market),
+								'description',
+								_user$project$Main$Snapchat,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Spotify but for ', model.market),
+								'description',
+								_user$project$Main$Spotify,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Stripe but for ', model.market),
+								'description',
+								_user$project$Main$Stripe,
+								_user$project$Main$UpdateDescription),
+								A4(
+								_user$project$RadioInput$view,
+								A2(_elm_lang$core$Basics_ops['++'], 'Uber but for ', model.market),
+								'description',
+								_user$project$Main$Uber,
+								_user$project$Main$UpdateDescription)
+							]))
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -7956,8 +7988,17 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('Are you a thought-leader or thought-follower?')
 							])),
-						A4(_user$project$RadioInput$view, 'Thought Leader', 'position', _user$project$Main$ThoughtLeader, _user$project$Main$UpdatePosition),
-						A4(_user$project$RadioInput$view, 'Thought Follower', 'position', _user$project$Main$ThoughtFollower, _user$project$Main$UpdatePosition)
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('multi-column')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A4(_user$project$RadioInput$view, 'Thought Leader', 'position', _user$project$Main$ThoughtLeader, _user$project$Main$UpdatePosition),
+								A4(_user$project$RadioInput$view, 'Thought Follower', 'position', _user$project$Main$ThoughtFollower, _user$project$Main$UpdatePosition)
+							]))
 					])),
 				A2(
 				_elm_lang$html$Html$div,

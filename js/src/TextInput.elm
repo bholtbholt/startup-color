@@ -5,6 +5,6 @@ import Html.Events exposing (..)
 
 view inputLabel inputValue action =
   section []
-    [ label [] [ text inputLabel ]
-    , input [ value inputValue, onInput action ] []
+    [ label [ class "block h2" ] [ text inputLabel ]
+    , input [ type' "text", value inputValue, onInput action ] []
   ]

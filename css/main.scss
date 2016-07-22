@@ -3,4 +3,65 @@
 ---
 @charset "utf-8";
 
+// =====================================================
+//  ~Margin ~Variables ~margin-lg ~margin-sm ~gutter
+// =====================================================
+
+$margin-xl: 40px;
+$margin-lg: 30px;
+$margin:    20px;
+$margin-sm: 10px;
+$margin-xs: 8px;
+
+$gutter:  10px;
+$columns: 12;
+
+
+
+// =====================================================
+//  ~Color ~Variables
+// =====================================================
+
+
+
+// =====================================================
+//  ~Font ~Variables
+// =====================================================
+
+$font-medium: 400;
+$font-bold: 500;
+$font-extra-bold: 700;
+$font-size: 12px;
+$font-size-sm: 10px;
+$font-size-lg: 14px;
+$font-size-xl: 16px;
+
+
+
+// =====================================================
+//  ~Border ~Variables
+// =====================================================
+
+$border-radius-lg: 6px;
+$border-radius-sm: 3px;
+$border-radius-round: 50%;
+
+
+
+// =====================================================
+//  ~@media ~Breakpoint ~Variables
+// =====================================================
+
+$breakpoint-min-sm: 768px;
+$breakpoint-max-sm: 767px;
+$breakpoint-min-md: 992px;
+$breakpoint-max-md: 991px;
+$breakpoint-max-lg: 1199px;
+$breakpoint-min-lg: 1200px;
+
+
+
+
+@import "reset";
 @import "base";
+@import "utilities";

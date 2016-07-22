@@ -1,0 +1,74 @@
+$margin-position: top bottom left right;
+
+@each $position in $margin-position {
+  .margin-#{$position} {
+    margin-#{$position}: $margin;
+  }
+
+  .margin-#{$position}-xl {
+    margin-#{$position}: $margin-xl;
+  }
+
+  .margin-#{$position}-lg {
+    margin-#{$position}: $margin-lg;
+  }
+
+  .margin-#{$position}-sm {
+    margin-#{$position}: $margin-sm;
+  }
+
+  .margin-#{$position}-xs {
+    margin-#{$position}: $margin-xs;
+  }
+
+  .margin-#{$position}-0 {
+    margin-#{$position}: 0;
+  }
+}
+
+@each $position in $margin-position {
+  .padding-#{$position} {
+    padding-#{$position}: $margin;
+  }
+
+  .padding-#{$position}-xl {
+    padding-#{$position}: $margin-xl;
+  }
+
+  .padding-#{$position}-lg {
+    padding-#{$position}: $margin-lg;
+  }
+
+  .padding-#{$position}-sm {
+    padding-#{$position}: $margin-sm;
+  }
+
+  .padding-#{$position}-xs {
+    padding-#{$position}: $margin-xs;
+  }
+
+  .padding-#{$position}-0 {
+    padding-#{$position}: 0;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
