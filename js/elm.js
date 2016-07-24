@@ -7897,6 +7897,10 @@ var _user$project$Main$model = {
 				{name: 'Banking', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
+				'Construction',
+				{name: 'Construction', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
 				'Education',
 				{name: 'Education', checked: false}),
 				A2(
@@ -7961,8 +7965,12 @@ var _user$project$Main$model = {
 				{name: 'Technology', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Tourism',
-				{name: 'Tourism', checked: false}),
+				'Telecommunications',
+				{name: 'Telecommunications', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Travel & Tourism',
+				{name: 'Travel & Tourism', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'Utilities',

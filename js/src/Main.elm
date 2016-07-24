@@ -48,6 +48,10 @@ model =
             { name = "Banking"
             , checked = False
             }
+        , "Construction" =>
+            { name = "Construction"
+            , checked = False
+            }
         , "Education" =>
             { name = "Education"
             , checked = False
@@ -112,8 +116,12 @@ model =
             { name = "Technology"
             , checked = False
             }
-        , "Tourism" =>
-            { name = "Tourism"
+        , "Telecommunications" =>
+            { name = "Telecommunications"
+            , checked = False
+            }
+        , "Travel & Tourism" =>
+            { name = "Travel & Tourism"
             , checked = False
             }
         , "Utilities" =>
