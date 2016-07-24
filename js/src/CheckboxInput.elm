@@ -3,8 +3,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-view inputModel action =
+view key data action =
   label []
-    [ input [ type' "checkbox", checked inputModel.checked, onClick (action inputModel.checked) ] []
-    , text inputModel.name
+    [ input [ type' "checkbox", checked data.checked, onCheck (action key) ] []
+    , text data.name
     ]

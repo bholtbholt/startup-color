@@ -7746,29 +7746,6 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _user$project$CheckboxInput$view = F2(
-	function (inputModel, action) {
-		return A2(
-			_elm_lang$html$Html$label,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$input,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$type$('checkbox'),
-							_elm_lang$html$Html_Attributes$checked(inputModel.checked),
-							_elm_lang$html$Html_Events$onClick(
-							action(inputModel.checked))
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					_elm_lang$html$Html$text(inputModel.name)
-				]));
-	});
-
 var _user$project$TextInput$view = F3(
 	function (inputLabel, inputValue, action) {
 		return A2(
@@ -7856,22 +7833,22 @@ var _user$project$Main$update = F2(
 					model,
 					{color: 'blue'});
 			default:
-				var fieldCollection = model.disruptedFields;
-				var field = fieldCollection.advertising;
+				var updateRecord = _elm_lang$core$Maybe$map(
+					function (checkboxData) {
+						return _elm_lang$core$Native_Utils.update(
+							checkboxData,
+							{checked: _p0._1});
+					});
+				var disruptedFieldsUpdated = A3(_elm_lang$core$Dict$update, _p0._0, updateRecord, model.disruptedFields);
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{
-						disruptedFields: _elm_lang$core$Native_Utils.update(
-							fieldCollection,
-							{
-								advertising: _elm_lang$core$Native_Utils.update(
-									field,
-									{
-										checked: _elm_lang$core$Basics$not(_p0._0)
-									})
-							})
-					});
+					{disruptedFields: disruptedFieldsUpdated});
 		}
+	});
+var _user$project$Main_ops = _user$project$Main_ops || {};
+_user$project$Main_ops['=>'] = F2(
+	function (a, b) {
+		return {ctor: '_Tuple2', _0: a, _1: b};
 	});
 var _user$project$Main$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
@@ -7903,16 +7880,28 @@ var _user$project$Main$model = {
 	description: _user$project$Main$Airbnb,
 	position: _user$project$Main$ThoughtLeader,
 	color: '',
-	disruptedFields: {
-		advertising: {name: 'Advertising', checked: false},
-		travel: {name: 'Travel', checked: false},
-		utilities: {name: 'Utilities', checked: false}
-	}
+	disruptedFields: _elm_lang$core$Dict$fromList(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_user$project$Main_ops['=>'],
+				'advertising',
+				{name: 'Advertising', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'travel',
+				{name: 'Travel', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'utilities',
+				{name: 'Utilities', checked: false})
+			]))
 };
 var _user$project$Main$UpdateColor = {ctor: 'UpdateColor'};
-var _user$project$Main$UpdateDisruptedField = function (a) {
-	return {ctor: 'UpdateDisruptedField', _0: a};
-};
+var _user$project$Main$UpdateDisruptedField = F2(
+	function (a, b) {
+		return {ctor: 'UpdateDisruptedField', _0: a, _1: b};
+	});
 var _user$project$Main$UpdateLocation = function (a) {
 	return {ctor: 'UpdateLocation', _0: a};
 };
@@ -7932,6 +7921,29 @@ var _user$project$Main$UpdateName = function (a) {
 	return {ctor: 'UpdateName', _0: a};
 };
 var _user$project$Main$view = function (model) {
+	var checkboxes = function (_p1) {
+		var _p2 = _p1;
+		var _p3 = _p2._1;
+		return A2(
+			_elm_lang$html$Html$label,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$input,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$type$('checkbox'),
+							_elm_lang$html$Html_Attributes$checked(_p3.checked),
+							_elm_lang$html$Html_Events$onCheck(
+							_user$project$Main$UpdateDisruptedField(_p2._0))
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[])),
+					_elm_lang$html$Html$text(_p3.name)
+				]));
+	};
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -7993,10 +8005,10 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html_Attributes$class('multi-column')
 							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(_user$project$CheckboxInput$view, model.disruptedFields.advertising, _user$project$Main$UpdateDisruptedField)
-							]))
+						A2(
+							_elm_lang$core$List$map,
+							checkboxes,
+							_elm_lang$core$Dict$toList(model.disruptedFields)))
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -8153,9 +8165,7 @@ var _user$project$Main$view = function (model) {
 								_elm_lang$html$Html$text('Find your color')
 							])),
 						_elm_lang$html$Html$text(model.color)
-					])),
-				_elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(model))
+					]))
 			]));
 };
 var _user$project$Main$main = {
