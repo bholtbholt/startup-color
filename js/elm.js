@@ -7885,16 +7885,92 @@ var _user$project$Main$model = {
 			[
 				A2(
 				_user$project$Main_ops['=>'],
-				'advertising',
-				{name: 'Advertising', checked: false}),
+				'Automotive',
+				{name: 'Automotive', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'travel',
-				{name: 'Travel', checked: false}),
+				'Alcohol',
+				{name: 'Alcohol', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'utilities',
-				{name: 'Utilities', checked: false})
+				'Banking',
+				{name: 'Banking', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Education',
+				{name: 'Education', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Energy',
+				{name: 'Energy', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Fashion',
+				{name: 'Fashion', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Film & Television',
+				{name: 'Film & Television', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Food',
+				{name: 'Food', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Health',
+				{name: 'Health', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Insurance',
+				{name: 'Insurance', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'News',
+				{name: 'News', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Legal',
+				{name: 'Legal', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Medical',
+				{name: 'Medical', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Music',
+				{name: 'Music', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Real Estate',
+				{name: 'Real Estate', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Retail',
+				{name: 'Retail', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Service',
+				{name: 'Service', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Sports',
+				{name: 'Sports', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Technology',
+				{name: 'Technology', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Tourism',
+				{name: 'Tourism', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Utilities',
+				{name: 'Utilities', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Video Games',
+				{name: 'Video Games', checked: false})
 			]))
 };
 var _user$project$Main$UpdateColor = {ctor: 'UpdateColor'};
@@ -8165,7 +8241,15 @@ var _user$project$Main$view = function (model) {
 								_elm_lang$html$Html$text('Find your color')
 							])),
 						_elm_lang$html$Html$text(model.color)
-					]))
+					])),
+				A2(
+				_elm_lang$html$Html$br,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				_elm_lang$html$Html$text(
+				_elm_lang$core$Basics$toString(model))
 			]));
 };
 var _user$project$Main$main = {
