@@ -7832,7 +7832,7 @@ var _user$project$Main$update = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{color: 'blue'});
-			default:
+			case 'UpdateDisruptedField':
 				var updateRecord = _elm_lang$core$Maybe$map(
 					function (checkboxData) {
 						return _elm_lang$core$Native_Utils.update(
@@ -7843,6 +7843,17 @@ var _user$project$Main$update = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{disruptedFields: disruptedFieldsUpdated});
+			default:
+				var updateRecord = _elm_lang$core$Maybe$map(
+					function (checkboxData) {
+						return _elm_lang$core$Native_Utils.update(
+							checkboxData,
+							{checked: _p0._1});
+					});
+				var officePerkUpdated = A3(_elm_lang$core$Dict$update, _p0._0, updateRecord, model.officePerks);
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{officePerks: officePerkUpdated});
 		}
 	});
 var _user$project$Main_ops = _user$project$Main_ops || {};
@@ -7850,9 +7861,9 @@ _user$project$Main_ops['=>'] = F2(
 	function (a, b) {
 		return {ctor: '_Tuple2', _0: a, _1: b};
 	});
-var _user$project$Main$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {name: a, location: b, revolutionary: c, market: d, description: e, position: f, color: g, disruptedFields: h};
+var _user$project$Main$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {name: a, location: b, revolutionary: c, market: d, description: e, position: f, color: g, disruptedFields: h, officePerks: i};
 	});
 var _user$project$Main$ThoughtFollower = {ctor: 'ThoughtFollower'};
 var _user$project$Main$ThoughtLeader = {ctor: 'ThoughtLeader'};
@@ -7979,9 +7990,77 @@ var _user$project$Main$model = {
 				_user$project$Main_ops['=>'],
 				'Video Games',
 				{name: 'Video Games', checked: false})
+			])),
+	officePerks: _elm_lang$core$Dict$fromList(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_user$project$Main_ops['=>'],
+				'Exposed Brick',
+				{name: 'Exposed Brick', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'White-board Walls',
+				{name: 'White-board Walls', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Roll-up Garage Door',
+				{name: 'Roll-up Garage Door', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Beer Taps',
+				{name: 'Beer Taps', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Stand-up Desks',
+				{name: 'Stand-up Desks', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Ping Pong Tables',
+				{name: 'Ping Pong Tables', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'XBox One Console',
+				{name: 'XBox One Console', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Playstation 4 Console',
+				{name: 'Playstation 4 Console', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Foosball',
+				{name: 'Foosball', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Exposed Pipes & Ceilings',
+				{name: 'Exposed Pipes & Ceilings', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Stocked Fridge',
+				{name: 'Stocked Fridge', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Dashboards',
+				{name: 'Dashboards', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Bean Bag Chairs',
+				{name: 'Bean Bag Chairs', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Nap Room',
+				{name: 'Nap Room', checked: false}),
+				A2(
+				_user$project$Main_ops['=>'],
+				'Yoga & Meditation Room',
+				{name: 'Yoga & Meditation Room', checked: false})
 			]))
 };
 var _user$project$Main$UpdateColor = {ctor: 'UpdateColor'};
+var _user$project$Main$UpdateOfficePerks = F2(
+	function (a, b) {
+		return {ctor: 'UpdateOfficePerks', _0: a, _1: b};
+	});
 var _user$project$Main$UpdateDisruptedField = F2(
 	function (a, b) {
 		return {ctor: 'UpdateDisruptedField', _0: a, _1: b};
@@ -8005,7 +8084,7 @@ var _user$project$Main$UpdateName = function (a) {
 	return {ctor: 'UpdateName', _0: a};
 };
 var _user$project$Main$view = function (model) {
-	var checkboxes = function (_p1) {
+	var perkCheckboxes = function (_p1) {
 		var _p2 = _p1;
 		var _p3 = _p2._1;
 		return A2(
@@ -8021,11 +8100,34 @@ var _user$project$Main$view = function (model) {
 							_elm_lang$html$Html_Attributes$type$('checkbox'),
 							_elm_lang$html$Html_Attributes$checked(_p3.checked),
 							_elm_lang$html$Html_Events$onCheck(
-							_user$project$Main$UpdateDisruptedField(_p2._0))
+							_user$project$Main$UpdateOfficePerks(_p2._0))
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[])),
 					_elm_lang$html$Html$text(_p3.name)
+				]));
+	};
+	var disruptingCheckboxes = function (_p4) {
+		var _p5 = _p4;
+		var _p6 = _p5._1;
+		return A2(
+			_elm_lang$html$Html$label,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$input,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$type$('checkbox'),
+							_elm_lang$html$Html_Attributes$checked(_p6.checked),
+							_elm_lang$html$Html_Events$onCheck(
+							_user$project$Main$UpdateDisruptedField(_p5._0))
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[])),
+					_elm_lang$html$Html$text(_p6.name)
 				]));
 	};
 	return A2(
@@ -8039,6 +8141,33 @@ var _user$project$Main$view = function (model) {
 				A3(_user$project$TextInput$view, 'What is your startup name?', model.name, _user$project$Main$UpdateName),
 				A3(_user$project$TextInput$view, 'Where are you located?', model.location, _user$project$Main$UpdateLocation),
 				A3(_user$project$TextInput$view, 'Who are your target users?', model.market, _user$project$Main$UpdateMarket),
+				A2(
+				_elm_lang$html$Html$section,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$id('disrupted-fields')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$h2,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('What fields are you disrupting?')
+							])),
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('multi-column')
+							]),
+						A2(
+							_elm_lang$core$List$map,
+							disruptingCheckboxes,
+							_elm_lang$core$Dict$toList(model.disruptedFields)))
+					])),
 				A2(
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
@@ -8066,33 +8195,6 @@ var _user$project$Main$view = function (model) {
 								A4(_user$project$RadioInput$view, 'Yes', 'revolutionary', _user$project$Main$Yes, _user$project$Main$UpdateRevolutionary),
 								A4(_user$project$RadioInput$view, 'No', 'revolutionary', _user$project$Main$No, _user$project$Main$UpdateRevolutionary)
 							]))
-					])),
-				A2(
-				_elm_lang$html$Html$section,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$id('disrupted-fields')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$h2,
-						_elm_lang$core$Native_List.fromArray(
-							[]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('What fields are you disrupting?')
-							])),
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('multi-column')
-							]),
-						A2(
-							_elm_lang$core$List$map,
-							checkboxes,
-							_elm_lang$core$Dict$toList(model.disruptedFields)))
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -8208,6 +8310,33 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
+						_elm_lang$html$Html_Attributes$id('office-perks')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$h2,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('What perks are available in your office?')
+							])),
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('multi-column')
+							]),
+						A2(
+							_elm_lang$core$List$map,
+							perkCheckboxes,
+							_elm_lang$core$Dict$toList(model.officePerks)))
+					])),
+				A2(
+				_elm_lang$html$Html$section,
+				_elm_lang$core$Native_List.fromArray(
+					[
 						_elm_lang$html$Html_Attributes$id('position')
 					]),
 				_elm_lang$core$Native_List.fromArray(
@@ -8249,15 +8378,7 @@ var _user$project$Main$view = function (model) {
 								_elm_lang$html$Html$text('Find your color')
 							])),
 						_elm_lang$html$Html$text(model.color)
-					])),
-				A2(
-				_elm_lang$html$Html$br,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[])),
-				_elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(model))
+					]))
 			]));
 };
 var _user$project$Main$main = {

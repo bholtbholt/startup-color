@@ -24,6 +24,7 @@ type alias Model =
   , position : Position
   , color : String
   , disruptedFields : {}
+  , officePerks : {}
   }
 
 model =
@@ -133,6 +134,69 @@ model =
             , checked = False
             }
         ]
+  , officePerks =
+      Dict.fromList
+        [ "Exposed Brick" =>
+            { name = "Exposed Brick"
+            , checked = False
+            }
+        , "White-board Walls" =>
+            { name = "White-board Walls"
+            , checked = False
+            }
+        , "Roll-up Garage Door" =>
+            { name = "Roll-up Garage Door"
+            , checked = False
+            }
+        , "Beer Taps" =>
+            { name = "Beer Taps"
+            , checked = False
+            }
+        , "Stand-up Desks" =>
+            { name = "Stand-up Desks"
+            , checked = False
+            }
+        , "Ping Pong Tables" =>
+            { name = "Ping Pong Tables"
+            , checked = False
+            }
+        , "XBox One Console" =>
+            { name = "XBox One Console"
+            , checked = False
+            }
+        , "Playstation 4 Console" =>
+            { name = "Playstation 4 Console"
+            , checked = False
+            }
+        , "Foosball" =>
+            { name = "Foosball"
+            , checked = False
+            }
+        , "Exposed Pipes & Ceilings" =>
+            { name = "Exposed Pipes & Ceilings"
+            , checked = False
+            }
+        , "Stocked Fridge" =>
+            { name = "Stocked Fridge"
+            , checked = False
+            }
+        , "Dashboards" =>
+            { name = "Dashboards"
+            , checked = False
+            }
+        , "Bean Bag Chairs" =>
+            { name = "Bean Bag Chairs"
+            , checked = False
+            }
+        , "Nap Room" =>
+            { name = "Nap Room"
+            , checked = False
+            }
+        , "Yoga & Meditation Room" =>
+            { name = "Yoga & Meditation Room"
+            , checked = False
+            }
+        ]
   }
 
 type Position
@@ -171,6 +235,7 @@ type Msg
   | UpdateDescription Description
   | UpdateLocation String
   | UpdateDisruptedField String Bool
+  | UpdateOfficePerks String Bool
   | UpdateColor
 
 
@@ -209,15 +274,33 @@ update msg model =
       in
         { model | disruptedFields = disruptedFieldsUpdated }
 
+    UpdateOfficePerks checkboxId checked ->
+      let
+        updateRecord =
+          Maybe.map (\checkboxData -> { checkboxData | checked = checked })
+
+        officePerkUpdated =
+          Dict.update checkboxId
+          updateRecord
+          model.officePerks
+      in
+        { model | officePerks = officePerkUpdated }
+
 
 
 -- VIEW
 
 view model =
   let
-    checkboxes ( key, data ) =
+    disruptingCheckboxes ( key, data ) =
       label []
         [ input [ type' "checkbox", checked data.checked, onCheck (UpdateDisruptedField key) ] []
+        , text data.name
+        ]
+
+    perkCheckboxes ( key, data ) =
+      label []
+        [ input [ type' "checkbox", checked data.checked, onCheck (UpdateOfficePerks key) ] []
         , text data.name
         ]
   in
@@ -225,17 +308,17 @@ view model =
       [ TextInput.view "What is your startup name?" model.name UpdateName
       , TextInput.view "Where are you located?" model.location UpdateLocation
       , TextInput.view "Who are your target users?" model.market UpdateMarket
+      , section [ id "disrupted-fields" ]
+        [ h2 [] [ text "What fields are you disrupting?" ]
+        , div [ class "multi-column" ]
+          (model.disruptedFields |> Dict.toList |> List.map disruptingCheckboxes)
+        ]
       , section [ id "revolutionary" ]
         [ h2 [] [ text "Are you revolutionary?"]
         , div [ class "multi-column" ]
           [ RadioInput.view "Yes" "revolutionary" Yes UpdateRevolutionary
           , RadioInput.view "No" "revolutionary" No UpdateRevolutionary
           ]
-        ]
-      , section [ id "disrupted-fields" ]
-        [ h2 [] [ text "What fields are you disrupting?" ]
-        , div [ class "multi-column" ]
-          (model.disruptedFields |> Dict.toList |> List.map checkboxes)
         ]
       , section [ id "market" ]
         [ h2 [] [ text "Describe your startup:" ]
@@ -256,6 +339,11 @@ view model =
           , RadioInput.view ("Uber but for " ++ model.market) "description" Uber UpdateDescription
           ]
         ]
+      , section [ id "office-perks" ]
+        [ h2 [] [ text "What perks are available in your office?" ]
+        , div [ class "multi-column" ]
+          (model.officePerks |> Dict.toList |> List.map perkCheckboxes)
+        ]
       , section [ id "position" ]
         [ h2 [] [ text "Are you a thought-leader or thought-follower?" ]
         , div [ class "multi-column" ]
@@ -268,13 +356,8 @@ view model =
           [ text "Find your color" ]
           , text model.color
         ]
-      , br [] []
-      , text (toString model)
       ]
 
-
--- what's are you valuated at? Hundred Thousands Millions Ten Millions Hundred Millions Billions
--- do you have: exposed brick, glass walls, garage, beer tap, stand up desks, ping-pong tables, xbox, ps4, wiiU, white-board walls, foosball, exposed ceilings, snacks
 -- progress bar/counter
 -- enter to move to next question
 -- autofocus questions
