@@ -36,16 +36,92 @@ model =
   , color = ""
   , disruptedFields =
       Dict.fromList
-        [ "advertising" =>
-            { name = "Advertising"
+        [ "Automotive" =>
+            { name = "Automotive"
             , checked = False
             }
-        , "travel" =>
-            { name = "Travel"
+        , "Alcohol" =>
+            { name = "Alcohol"
             , checked = False
             }
-        , "utilities" =>
+        , "Banking" =>
+            { name = "Banking"
+            , checked = False
+            }
+        , "Education" =>
+            { name = "Education"
+            , checked = False
+            }
+        , "Energy" =>
+            { name = "Energy"
+            , checked = False
+            }
+        , "Fashion" =>
+            { name = "Fashion"
+            , checked = False
+            }
+        , "Film & Television" =>
+            { name = "Film & Television"
+            , checked = False
+            }
+        , "Food" =>
+            { name = "Food"
+            , checked = False
+            }
+        , "Health" =>
+            { name = "Health"
+            , checked = False
+            }
+        , "Insurance" =>
+            { name = "Insurance"
+            , checked = False
+            }
+        , "News" =>
+            { name = "News"
+            , checked = False
+            }
+        , "Legal" =>
+            { name = "Legal"
+            , checked = False
+            }
+        , "Medical" =>
+            { name = "Medical"
+            , checked = False
+            }
+        , "Music" =>
+            { name = "Music"
+            , checked = False
+            }
+        , "Real Estate" =>
+            { name = "Real Estate"
+            , checked = False
+            }
+        , "Retail" =>
+            { name = "Retail"
+            , checked = False
+            }
+        , "Service" =>
+            { name = "Service"
+            , checked = False
+            }
+        , "Sports" =>
+            { name = "Sports"
+            , checked = False
+            }
+        , "Technology" =>
+            { name = "Technology"
+            , checked = False
+            }
+        , "Tourism" =>
+            { name = "Tourism"
+            , checked = False
+            }
+        , "Utilities" =>
             { name = "Utilities"
+            , checked = False
+            }
+        , "Video Games" =>
+            { name = "Video Games"
             , checked = False
             }
         ]
@@ -151,7 +227,7 @@ view model =
       , section [ id "disrupted-fields" ]
         [ h2 [] [ text "What fields are you disrupting?" ]
         , div [ class "multi-column" ]
-        (model.disruptedFields |> Dict.toList |> List.map checkboxes)
+          (model.disruptedFields |> Dict.toList |> List.map checkboxes)
         ]
       , section [ id "market" ]
         [ h2 [] [ text "Describe your startup:" ]
@@ -184,7 +260,8 @@ view model =
           [ text "Find your color" ]
           , text model.color
         ]
-      --, text (toString model)
+      , br [] []
+      , text (toString model)
       ]
 
 
