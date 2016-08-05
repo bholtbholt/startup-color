@@ -16,7 +16,8 @@ main =
 -- MODEL
 
 type alias Model =
-  { name : String
+  { progress : Int
+  , name : String
   , location : String
   , revolutionary : Revolutionary
   , market : String
@@ -28,7 +29,8 @@ type alias Model =
   }
 
 model =
-  { name = ""
+  { progress = 0
+  , name = ""
   , location = ""
   , revolutionary = Yes
   , market = ""
@@ -41,16 +43,8 @@ model =
             { name = "Automotive"
             , checked = False
             }
-        , "Alcohol" =>
-            { name = "Alcohol"
-            , checked = False
-            }
         , "Banking" =>
             { name = "Banking"
-            , checked = False
-            }
-        , "Construction" =>
-            { name = "Construction"
             , checked = False
             }
         , "Education" =>
@@ -77,32 +71,12 @@ model =
             { name = "Health"
             , checked = False
             }
-        , "Insurance" =>
-            { name = "Insurance"
+        , "Entertainment" =>
+            { name = "Entertainment"
             , checked = False
             }
         , "News" =>
             { name = "News"
-            , checked = False
-            }
-        , "Legal" =>
-            { name = "Legal"
-            , checked = False
-            }
-        , "Medical" =>
-            { name = "Medical"
-            , checked = False
-            }
-        , "Music" =>
-            { name = "Music"
-            , checked = False
-            }
-        , "Real Estate" =>
-            { name = "Real Estate"
-            , checked = False
-            }
-        , "Retail" =>
-            { name = "Retail"
             , checked = False
             }
         , "Service" =>
@@ -117,20 +91,12 @@ model =
             { name = "Technology"
             , checked = False
             }
-        , "Telecommunications" =>
-            { name = "Telecommunications"
-            , checked = False
-            }
         , "Travel & Tourism" =>
             { name = "Travel & Tourism"
             , checked = False
             }
         , "Utilities" =>
             { name = "Utilities"
-            , checked = False
-            }
-        , "Video Games" =>
-            { name = "Video Games"
             , checked = False
             }
         ]
@@ -142,10 +108,6 @@ model =
             }
         , "White-board Walls" =>
             { name = "White-board Walls"
-            , checked = False
-            }
-        , "Roll-up Garage Door" =>
-            { name = "Roll-up Garage Door"
             , checked = False
             }
         , "Beer Taps" =>
@@ -160,12 +122,8 @@ model =
             { name = "Ping Pong Tables"
             , checked = False
             }
-        , "XBox One Console" =>
-            { name = "XBox One Console"
-            , checked = False
-            }
-        , "Playstation 4 Console" =>
-            { name = "Playstation 4 Console"
+        , "Video Game Console" =>
+            { name = "Video Game Console"
             , checked = False
             }
         , "Foosball" =>
@@ -178,10 +136,6 @@ model =
             }
         , "Stocked Fridge" =>
             { name = "Stocked Fridge"
-            , checked = False
-            }
-        , "Dashboards" =>
-            { name = "Dashboards"
             , checked = False
             }
         , "Bean Bag Chairs" =>
@@ -237,12 +191,16 @@ type Msg
   | UpdateDisruptedField String Bool
   | UpdateOfficePerks String Bool
   | UpdateColor
+  | UpdateProgress Int
 
 
 update msg model =
   case msg of
     UpdateName value ->
       { model | name = value }
+
+    UpdateProgress value ->
+      { model | progress = (clamp 0 9 (model.progress + value)) }
 
     UpdateLocation value ->
       { model | location = value }
@@ -305,7 +263,31 @@ view model =
         ]
   in
     div [ class "elm-wrapper" ]
-      [ TextInput.view "What is your startup name?" model.name UpdateName
+      [ div [ class "progress-bar" ]
+        [ div
+          [ style
+            [ ("width", ((toString ((toFloat model.progress) / 9 * 100))++ "%")) ]
+          , class "progress-indication"
+          ]
+        []
+      ]
+      , div [ class "progress-buttons" ]
+        [ button
+          [ class "btn-primary"
+          , if model.progress == 0 then style [ ("visibility", "hidden") ] else style []
+          , onClick (UpdateProgress -1)
+          ] [ text "Back" ]
+        , button
+          [ class "btn-primary"
+          , if model.progress == 9 then style [ ("visibility", "hidden") ] else style []
+          , onClick (UpdateProgress  1)
+          ] [ text "Next" ]
+        ]
+      , section [ id "start" ]
+        [ h2 [] [ text "Welcome to Startup Colour" ]
+        , p [] [ text "Answer a few questions to find out what brand colours you should use for your brand-new startup!" ]
+        ]
+      , TextInput.view "What is your startup name?" model.name UpdateName
       , TextInput.view "Where are you located?" model.location UpdateLocation
       , TextInput.view "Who are your target users?" model.market UpdateMarket
       , section [ id "disrupted-fields" ]
@@ -352,13 +334,12 @@ view model =
           ]
         ]
       , div []
-        [ button [ onClick UpdateColor ]
+        [ button [ class "btn-primary", onClick UpdateColor ]
           [ text "Find your color" ]
           , text model.color
         ]
       ]
 
--- progress bar/counter
 -- enter to move to next question
 -- autofocus questions
 -- before/next buttons

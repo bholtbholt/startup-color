@@ -1249,123 +1249,49 @@ var _elm_lang$core$Native_Utils = function() {
 
 // COMPARISONS
 
-function eq(x, y)
+function eq(rootX, rootY)
 {
-	var stack = [];
-	var isEqual = eqHelp(x, y, 0, stack);
-	var pair;
-	while (isEqual && (pair = stack.pop()))
+	var stack = [{ x: rootX, y: rootY }];
+	while (stack.length > 0)
 	{
-		isEqual = eqHelp(pair.x, pair.y, 0, stack);
-	}
-	return isEqual;
-}
-
-
-function eqHelp(x, y, depth, stack)
-{
-	if (depth > 100)
-	{
-		stack.push({ x: x, y: y });
-		return true;
-	}
-
-	if (x === y)
-	{
-		return true;
-	}
-
-	if (typeof x !== 'object')
-	{
-		if (typeof x === 'function')
+		var front = stack.pop();
+		var x = front.x;
+		var y = front.y;
+		if (x === y)
 		{
-			throw new Error(
-				'Trying to use `(==)` on functions. There is no way to know if functions are "the same" in the Elm sense.'
-				+ ' Read more about this at http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#=='
-				+ ' which describes why it is this way and what the better version will look like.'
-			);
+			continue;
 		}
-		return false;
-	}
-
-	if (x === null || y === null)
-	{
-		return false
-	}
-
-	if (x instanceof Date)
-	{
-		return x.getTime() === y.getTime();
-	}
-
-	if (!('ctor' in x))
-	{
-		for (var key in x)
+		if (typeof x === 'object')
 		{
-			if (!eqHelp(x[key], y[key], depth + 1, stack))
+			var c = 0;
+			for (var key in x)
+			{
+				++c;
+				if (!(key in y))
+				{
+					return false;
+				}
+				if (key === 'ctor')
+				{
+					continue;
+				}
+				stack.push({ x: x[key], y: y[key] });
+			}
+			if ('ctor' in x)
+			{
+				stack.push({ x: x.ctor, y: y.ctor});
+			}
+			if (c !== Object.keys(y).length)
 			{
 				return false;
 			}
 		}
-		return true;
-	}
-
-	// convert Dicts and Sets to lists
-	if (x.ctor === 'RBNode_elm_builtin' || x.ctor === 'RBEmpty_elm_builtin')
-	{
-		x = _elm_lang$core$Dict$toList(x);
-		y = _elm_lang$core$Dict$toList(y);
-	}
-	if (x.ctor === 'Set_elm_builtin')
-	{
-		x = _elm_lang$core$Set$toList(x);
-		y = _elm_lang$core$Set$toList(y);
-	}
-
-	// check if lists are equal without recursion
-	if (x.ctor === '::')
-	{
-		var a = x;
-		var b = y;
-		while (a.ctor === '::' && b.ctor === '::')
+		else if (typeof x === 'function')
 		{
-			if (!eqHelp(a._0, b._0, depth + 1, stack))
-			{
-				return false;
-			}
-			a = a._1;
-			b = b._1;
+			throw new Error('Equality error: general function equality is ' +
+							'undecidable, and therefore, unsupported');
 		}
-		return a.ctor === b.ctor;
-	}
-
-	// check if Arrays are equal
-	if (x.ctor === '_Array')
-	{
-		var xs = _elm_lang$core$Native_Array.toJSArray(x);
-		var ys = _elm_lang$core$Native_Array.toJSArray(y);
-		if (xs.length !== ys.length)
-		{
-			return false;
-		}
-		for (var i = 0; i < xs.length; i++)
-		{
-			if (!eqHelp(xs[i], ys[i], depth + 1, stack))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	if (!eqHelp(x.ctor, y.ctor, depth + 1, stack))
-	{
-		return false;
-	}
-
-	for (var key in x)
-	{
-		if (!eqHelp(x[key], y[key], depth + 1, stack))
+		else
 		{
 			return false;
 		}
@@ -1380,23 +1306,34 @@ var LT = -1, EQ = 0, GT = 1;
 
 function cmp(x, y)
 {
+	var ord;
 	if (typeof x !== 'object')
 	{
 		return x === y ? EQ : x < y ? LT : GT;
 	}
-
-	if (x instanceof String)
+	else if (x instanceof String)
 	{
 		var a = x.valueOf();
 		var b = y.valueOf();
-		return a === b ? EQ : a < b ? LT : GT;
+		return a === b
+			? EQ
+			: a < b
+				? LT
+				: GT;
 	}
-
-	if (x.ctor === '::' || x.ctor === '[]')
+	else if (x.ctor === '::' || x.ctor === '[]')
 	{
-		while (x.ctor === '::' && y.ctor === '::')
+		while (true)
 		{
-			var ord = cmp(x._0, y._0);
+			if (x.ctor === '[]' && y.ctor === '[]')
+			{
+				return EQ;
+			}
+			if (x.ctor !== y.ctor)
+			{
+				return x.ctor === '[]' ? LT : GT;
+			}
+			ord = cmp(x._0, y._0);
 			if (ord !== EQ)
 			{
 				return ord;
@@ -1404,12 +1341,9 @@ function cmp(x, y)
 			x = x._1;
 			y = y._1;
 		}
-		return x.ctor === y.ctor ? EQ : x.ctor === '[]' ? LT : GT;
 	}
-
-	if (x.ctor.slice(0, 6) === '_Tuple')
+	else if (x.ctor.slice(0, 6) === '_Tuple')
 	{
-		var ord;
 		var n = x.ctor.slice(6) - 0;
 		var err = 'cannot compare tuples with more than 6 elements.';
 		if (n === 0) return EQ;
@@ -1422,12 +1356,12 @@ function cmp(x, y)
 		if (n >= 7) throw new Error('Comparison error: ' + err); } } } } } }
 		return EQ;
 	}
-
-	throw new Error(
-		'Comparison error: comparison is only defined on ints, '
-		+ 'floats, times, chars, strings, lists of comparable values, '
-		+ 'and tuples of comparable values.'
-	);
+	else
+	{
+		throw new Error('Comparison error: comparison is only defined on ints, ' +
+						'floats, times, chars, strings, lists of comparable values, ' +
+						'and tuples of comparable values.');
+	}
 }
 
 
@@ -1640,14 +1574,24 @@ function toString(v)
 			return '[]';
 		}
 
-		if (v.ctor === 'Set_elm_builtin')
+		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin' || v.ctor === 'Set_elm_builtin')
 		{
-			return 'Set.fromList ' + toString(_elm_lang$core$Set$toList(v));
-		}
-
-		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin')
-		{
-			return 'Dict.fromList ' + toString(_elm_lang$core$Dict$toList(v));
+			var name, list;
+			if (v.ctor === 'Set_elm_builtin')
+			{
+				name = 'Set';
+				list = A2(
+					_elm_lang$core$List$map,
+					function(x) {return x._0; },
+					_elm_lang$core$Dict$toList(v._0)
+				);
+			}
+			else
+			{
+				name = 'Dict';
+				list = _elm_lang$core$Dict$toList(v);
+			}
+			return name + '.fromList ' + toString(list);
 		}
 
 		var output = '';
@@ -1664,16 +1608,6 @@ function toString(v)
 
 	if (type === 'object')
 	{
-		if (v instanceof Date)
-		{
-			return '<' + v.toString() + '>';
-		}
-
-		if (v.elm_web_socket)
-		{
-			return '<websocket>';
-		}
-
 		var output = [];
 		for (var k in v)
 		{
@@ -4113,50 +4047,33 @@ var _elm_lang$core$Dict$merge = F6(
 	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
 		var stepState = F3(
 			function (rKey, rValue, _p2) {
-				stepState:
-				while (true) {
-					var _p3 = _p2;
-					var _p9 = _p3._1;
-					var _p8 = _p3._0;
-					var _p4 = _p8;
-					if (_p4.ctor === '[]') {
-						return {
-							ctor: '_Tuple2',
-							_0: _p8,
-							_1: A3(rightStep, rKey, rValue, _p9)
-						};
-					} else {
-						var _p7 = _p4._1;
-						var _p6 = _p4._0._1;
-						var _p5 = _p4._0._0;
-						if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) < 0) {
-							var _v10 = rKey,
-								_v11 = rValue,
-								_v12 = {
-								ctor: '_Tuple2',
-								_0: _p7,
-								_1: A3(leftStep, _p5, _p6, _p9)
-							};
-							rKey = _v10;
-							rValue = _v11;
-							_p2 = _v12;
-							continue stepState;
-						} else {
-							if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) > 0) {
-								return {
-									ctor: '_Tuple2',
-									_0: _p8,
-									_1: A3(rightStep, rKey, rValue, _p9)
-								};
-							} else {
-								return {
-									ctor: '_Tuple2',
-									_0: _p7,
-									_1: A4(bothStep, _p5, _p6, rValue, _p9)
-								};
-							}
-						}
-					}
+				var _p3 = _p2;
+				var _p9 = _p3._1;
+				var _p8 = _p3._0;
+				var _p4 = _p8;
+				if (_p4.ctor === '[]') {
+					return {
+						ctor: '_Tuple2',
+						_0: _p8,
+						_1: A3(rightStep, rKey, rValue, _p9)
+					};
+				} else {
+					var _p7 = _p4._1;
+					var _p6 = _p4._0._1;
+					var _p5 = _p4._0._0;
+					return (_elm_lang$core$Native_Utils.cmp(_p5, rKey) < 0) ? {
+						ctor: '_Tuple2',
+						_0: _p7,
+						_1: A3(leftStep, _p5, _p6, _p9)
+					} : ((_elm_lang$core$Native_Utils.cmp(_p5, rKey) > 0) ? {
+						ctor: '_Tuple2',
+						_0: _p8,
+						_1: A3(rightStep, rKey, rValue, _p9)
+					} : {
+						ctor: '_Tuple2',
+						_0: _p7,
+						_1: A4(bothStep, _p5, _p6, rValue, _p9)
+					});
 				}
 			});
 		var _p10 = A3(
@@ -4199,19 +4116,19 @@ var _elm_lang$core$Dict$reportRemBug = F4(
 	});
 var _elm_lang$core$Dict$isBBlack = function (dict) {
 	var _p13 = dict;
-	_v14_2:
+	_v11_2:
 	do {
 		if (_p13.ctor === 'RBNode_elm_builtin') {
 			if (_p13._0.ctor === 'BBlack') {
 				return true;
 			} else {
-				break _v14_2;
+				break _v11_2;
 			}
 		} else {
 			if (_p13._0.ctor === 'LBBlack') {
 				return true;
 			} else {
-				break _v14_2;
+				break _v11_2;
 			}
 		}
 	} while(false);
@@ -4225,10 +4142,10 @@ var _elm_lang$core$Dict$sizeHelp = F2(
 			if (_p14.ctor === 'RBEmpty_elm_builtin') {
 				return n;
 			} else {
-				var _v16 = A2(_elm_lang$core$Dict$sizeHelp, n + 1, _p14._4),
-					_v17 = _p14._3;
-				n = _v16;
-				dict = _v17;
+				var _v13 = A2(_elm_lang$core$Dict$sizeHelp, n + 1, _p14._4),
+					_v14 = _p14._3;
+				n = _v13;
+				dict = _v14;
 				continue sizeHelp;
 			}
 		}
@@ -4247,18 +4164,18 @@ var _elm_lang$core$Dict$get = F2(
 				var _p16 = A2(_elm_lang$core$Basics$compare, targetKey, _p15._1);
 				switch (_p16.ctor) {
 					case 'LT':
-						var _v20 = targetKey,
-							_v21 = _p15._3;
-						targetKey = _v20;
-						dict = _v21;
+						var _v17 = targetKey,
+							_v18 = _p15._3;
+						targetKey = _v17;
+						dict = _v18;
 						continue get;
 					case 'EQ':
 						return _elm_lang$core$Maybe$Just(_p15._2);
 					default:
-						var _v22 = targetKey,
-							_v23 = _p15._4;
-						targetKey = _v22;
-						dict = _v23;
+						var _v19 = targetKey,
+							_v20 = _p15._4;
+						targetKey = _v19;
+						dict = _v20;
 						continue get;
 				}
 			}
@@ -4281,12 +4198,12 @@ var _elm_lang$core$Dict$maxWithDefault = F3(
 			if (_p18.ctor === 'RBEmpty_elm_builtin') {
 				return {ctor: '_Tuple2', _0: k, _1: v};
 			} else {
-				var _v26 = _p18._1,
-					_v27 = _p18._2,
-					_v28 = _p18._4;
-				k = _v26;
-				v = _v27;
-				r = _v28;
+				var _v23 = _p18._1,
+					_v24 = _p18._2,
+					_v25 = _p18._4;
+				k = _v23;
+				v = _v24;
+				r = _v25;
 				continue maxWithDefault;
 			}
 		}
@@ -4412,19 +4329,19 @@ var _elm_lang$core$Dict$redden = function (t) {
 };
 var _elm_lang$core$Dict$balanceHelp = function (tree) {
 	var _p27 = tree;
-	_v36_6:
+	_v33_6:
 	do {
-		_v36_5:
+		_v33_5:
 		do {
-			_v36_4:
+			_v33_4:
 			do {
-				_v36_3:
+				_v33_3:
 				do {
-					_v36_2:
+					_v33_2:
 					do {
-						_v36_1:
+						_v33_1:
 						do {
-							_v36_0:
+							_v33_0:
 							do {
 								if (_p27.ctor === 'RBNode_elm_builtin') {
 									if (_p27._3.ctor === 'RBNode_elm_builtin') {
@@ -4434,44 +4351,44 @@ var _elm_lang$core$Dict$balanceHelp = function (tree) {
 													switch (_p27._4._0.ctor) {
 														case 'Red':
 															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
+																break _v33_0;
 															} else {
 																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
+																	break _v33_1;
 																} else {
 																	if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																		break _v36_2;
+																		break _v33_2;
 																	} else {
 																		if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																			break _v36_3;
+																			break _v33_3;
 																		} else {
-																			break _v36_6;
+																			break _v33_6;
 																		}
 																	}
 																}
 															}
 														case 'NBlack':
 															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
+																break _v33_0;
 															} else {
 																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
+																	break _v33_1;
 																} else {
 																	if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																		break _v36_4;
+																		break _v33_4;
 																	} else {
-																		break _v36_6;
+																		break _v33_6;
 																	}
 																}
 															}
 														default:
 															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
+																break _v33_0;
 															} else {
 																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
+																	break _v33_1;
 																} else {
-																	break _v36_6;
+																	break _v33_6;
 																}
 															}
 													}
@@ -4479,81 +4396,81 @@ var _elm_lang$core$Dict$balanceHelp = function (tree) {
 													switch (_p27._4._0.ctor) {
 														case 'Red':
 															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																break _v36_2;
+																break _v33_2;
 															} else {
 																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																	break _v36_3;
+																	break _v33_3;
 																} else {
 																	if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																		break _v36_5;
+																		break _v33_5;
 																	} else {
-																		break _v36_6;
+																		break _v33_6;
 																	}
 																}
 															}
 														case 'NBlack':
 															if (_p27._0.ctor === 'BBlack') {
 																if ((((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																	break _v36_4;
+																	break _v33_4;
 																} else {
 																	if ((((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																		break _v36_5;
+																		break _v33_5;
 																	} else {
-																		break _v36_6;
+																		break _v33_6;
 																	}
 																}
 															} else {
-																break _v36_6;
+																break _v33_6;
 															}
 														default:
 															if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																break _v36_5;
+																break _v33_5;
 															} else {
-																break _v36_6;
+																break _v33_6;
 															}
 													}
 												default:
 													switch (_p27._4._0.ctor) {
 														case 'Red':
 															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																break _v36_2;
+																break _v33_2;
 															} else {
 																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																	break _v36_3;
+																	break _v33_3;
 																} else {
-																	break _v36_6;
+																	break _v33_6;
 																}
 															}
 														case 'NBlack':
 															if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																break _v36_4;
+																break _v33_4;
 															} else {
-																break _v36_6;
+																break _v33_6;
 															}
 														default:
-															break _v36_6;
+															break _v33_6;
 													}
 											}
 										} else {
 											switch (_p27._3._0.ctor) {
 												case 'Red':
 													if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-														break _v36_0;
+														break _v33_0;
 													} else {
 														if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-															break _v36_1;
+															break _v33_1;
 														} else {
-															break _v36_6;
+															break _v33_6;
 														}
 													}
 												case 'NBlack':
 													if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-														break _v36_5;
+														break _v33_5;
 													} else {
-														break _v36_6;
+														break _v33_6;
 													}
 												default:
-													break _v36_6;
+													break _v33_6;
 											}
 										}
 									} else {
@@ -4561,29 +4478,29 @@ var _elm_lang$core$Dict$balanceHelp = function (tree) {
 											switch (_p27._4._0.ctor) {
 												case 'Red':
 													if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-														break _v36_2;
+														break _v33_2;
 													} else {
 														if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-															break _v36_3;
+															break _v33_3;
 														} else {
-															break _v36_6;
+															break _v33_6;
 														}
 													}
 												case 'NBlack':
 													if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-														break _v36_4;
+														break _v33_4;
 													} else {
-														break _v36_6;
+														break _v33_6;
 													}
 												default:
-													break _v36_6;
+													break _v33_6;
 											}
 										} else {
-											break _v36_6;
+											break _v33_6;
 										}
 									}
 								} else {
-									break _v36_6;
+									break _v33_6;
 								}
 							} while(false);
 							return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._3._1)(_p27._3._3._2)(_p27._3._1)(_p27._3._2)(_p27._1)(_p27._2)(_p27._3._3._3)(_p27._3._3._4)(_p27._3._4)(_p27._4);
@@ -5166,11 +5083,6 @@ function badOneOf(problems)
 	return { tag: 'oneOf', problems: problems };
 }
 
-function badCustom(msg)
-{
-	return { tag: 'custom', msg: msg };
-}
-
 function bad(msg)
 {
 	return { tag: 'fail', msg: msg };
@@ -5207,11 +5119,6 @@ function badToString(problem)
 				return 'I ran into the following problems'
 					+ (context === '_' ? '' : ' at ' + context)
 					+ ':\n\n' + problems.join('\n');
-
-			case 'custom':
-				return 'A `customDecode` failed'
-					+ (context === '_' ? '' : ' at ' + context)
-					+ ' with the message: ' + problem.msg;
 
 			case 'fail':
 				return 'I ran into a `fail` decoder'
@@ -5415,7 +5322,7 @@ function runHelp(decoder, value)
 			var realResult = decoder.callback(result.value);
 			if (realResult.ctor === 'Err')
 			{
-				return badCustom(realResult._0);
+				return badPrimitive('something custom', value);
 			}
 			return ok(realResult._0);
 
@@ -7808,6 +7715,12 @@ var _user$project$Main$update = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{name: _p0._0});
+			case 'UpdateProgress':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						progress: A3(_elm_lang$core$Basics$clamp, 0, 9, model.progress + _p0._0)
+					});
 			case 'UpdateLocation':
 				return _elm_lang$core$Native_Utils.update(
 					model,
@@ -7861,10 +7774,27 @@ _user$project$Main_ops['=>'] = F2(
 	function (a, b) {
 		return {ctor: '_Tuple2', _0: a, _1: b};
 	});
-var _user$project$Main$Model = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {name: a, location: b, revolutionary: c, market: d, description: e, position: f, color: g, disruptedFields: h, officePerks: i};
-	});
+var _user$project$Main$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {progress: a, name: b, location: c, revolutionary: d, market: e, description: f, position: g, color: h, disruptedFields: i, officePerks: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _user$project$Main$ThoughtFollower = {ctor: 'ThoughtFollower'};
 var _user$project$Main$ThoughtLeader = {ctor: 'ThoughtLeader'};
 var _user$project$Main$No = {ctor: 'No'};
@@ -7884,6 +7814,7 @@ var _user$project$Main$Dropbox = {ctor: 'Dropbox'};
 var _user$project$Main$Amazon = {ctor: 'Amazon'};
 var _user$project$Main$Airbnb = {ctor: 'Airbnb'};
 var _user$project$Main$model = {
+	progress: 0,
 	name: '',
 	location: '',
 	revolutionary: _user$project$Main$Yes,
@@ -7900,16 +7831,8 @@ var _user$project$Main$model = {
 				{name: 'Automotive', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Alcohol',
-				{name: 'Alcohol', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
 				'Banking',
 				{name: 'Banking', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Construction',
-				{name: 'Construction', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'Education',
@@ -7936,32 +7859,12 @@ var _user$project$Main$model = {
 				{name: 'Health', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Insurance',
-				{name: 'Insurance', checked: false}),
+				'Entertainment',
+				{name: 'Entertainment', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'News',
 				{name: 'News', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Legal',
-				{name: 'Legal', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Medical',
-				{name: 'Medical', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Music',
-				{name: 'Music', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Real Estate',
-				{name: 'Real Estate', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Retail',
-				{name: 'Retail', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'Service',
@@ -7976,20 +7879,12 @@ var _user$project$Main$model = {
 				{name: 'Technology', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Telecommunications',
-				{name: 'Telecommunications', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
 				'Travel & Tourism',
 				{name: 'Travel & Tourism', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'Utilities',
-				{name: 'Utilities', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Video Games',
-				{name: 'Video Games', checked: false})
+				{name: 'Utilities', checked: false})
 			])),
 	officePerks: _elm_lang$core$Dict$fromList(
 		_elm_lang$core$Native_List.fromArray(
@@ -8004,10 +7899,6 @@ var _user$project$Main$model = {
 				{name: 'White-board Walls', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Roll-up Garage Door',
-				{name: 'Roll-up Garage Door', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
 				'Beer Taps',
 				{name: 'Beer Taps', checked: false}),
 				A2(
@@ -8020,12 +7911,8 @@ var _user$project$Main$model = {
 				{name: 'Ping Pong Tables', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'XBox One Console',
-				{name: 'XBox One Console', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
-				'Playstation 4 Console',
-				{name: 'Playstation 4 Console', checked: false}),
+				'Video Game Console',
+				{name: 'Video Game Console', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'Foosball',
@@ -8040,10 +7927,6 @@ var _user$project$Main$model = {
 				{name: 'Stocked Fridge', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Dashboards',
-				{name: 'Dashboards', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
 				'Bean Bag Chairs',
 				{name: 'Bean Bag Chairs', checked: false}),
 				A2(
@@ -8055,6 +7938,9 @@ var _user$project$Main$model = {
 				'Yoga & Meditation Room',
 				{name: 'Yoga & Meditation Room', checked: false})
 			]))
+};
+var _user$project$Main$UpdateProgress = function (a) {
+	return {ctor: 'UpdateProgress', _0: a};
 };
 var _user$project$Main$UpdateColor = {ctor: 'UpdateColor'};
 var _user$project$Main$UpdateOfficePerks = F2(
@@ -8138,6 +8024,108 @@ var _user$project$Main$view = function (model) {
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('progress-bar')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[
+										{
+										ctor: '_Tuple2',
+										_0: 'width',
+										_1: A2(
+											_elm_lang$core$Basics_ops['++'],
+											_elm_lang$core$Basics$toString(
+												(_elm_lang$core$Basics$toFloat(model.progress) / 9) * 100),
+											'%')
+									}
+									])),
+								_elm_lang$html$Html_Attributes$class('progress-indication')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[]))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('progress-buttons')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$button,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('btn-primary'),
+								_elm_lang$core$Native_Utils.eq(model.progress, 0) ? _elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[
+										{ctor: '_Tuple2', _0: 'visibility', _1: 'hidden'}
+									])) : _elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[])),
+								_elm_lang$html$Html_Events$onClick(
+								_user$project$Main$UpdateProgress(-1))
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Back')
+							])),
+						A2(
+						_elm_lang$html$Html$button,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('btn-primary'),
+								_elm_lang$core$Native_Utils.eq(model.progress, 9) ? _elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[
+										{ctor: '_Tuple2', _0: 'visibility', _1: 'hidden'}
+									])) : _elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[])),
+								_elm_lang$html$Html_Events$onClick(
+								_user$project$Main$UpdateProgress(1))
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Next')
+							]))
+					])),
+				A2(
+				_elm_lang$html$Html$section,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$id('start')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$h2,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Welcome to Startup Colour')
+							])),
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Answer a few questions to find out what brand colours you should use for your brand-new startup!')
+							]))
+					])),
 				A3(_user$project$TextInput$view, 'What is your startup name?', model.name, _user$project$Main$UpdateName),
 				A3(_user$project$TextInput$view, 'Where are you located?', model.location, _user$project$Main$UpdateLocation),
 				A3(_user$project$TextInput$view, 'Who are your target users?', model.market, _user$project$Main$UpdateMarket),
@@ -8371,6 +8359,7 @@ var _user$project$Main$view = function (model) {
 						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(
 							[
+								_elm_lang$html$Html_Attributes$class('btn-primary'),
 								_elm_lang$html$Html_Events$onClick(_user$project$Main$UpdateColor)
 							]),
 						_elm_lang$core$Native_List.fromArray(

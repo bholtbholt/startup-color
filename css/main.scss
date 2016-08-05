@@ -29,6 +29,7 @@ $orange: #ef8120;
 $purple: #9c205f;
 $red: #ed542b;
 $white: #fff;
+$light-white: rgba(255,255,255,.2);
 
 
 // =====================================================
@@ -70,4 +71,5 @@ $breakpoint-lg: 1200px;
 @import "reset";
 @import "layout";
 @import "forms";
+@import "progress_components";
 @import "utilities";
