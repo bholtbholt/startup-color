@@ -272,37 +272,39 @@ view model =
         []
       ]
       , div [ class "progress-buttons" ]
-        [ button
+        [ a
           [ class "btn-primary"
+          , href ("#question-" ++ (toString (model.progress - 1)))
           , if model.progress == 0 then style [ ("visibility", "hidden") ] else style []
           , onClick (UpdateProgress -1)
           ] [ text "Back" ]
-        , button
+        , a
           [ class "btn-primary"
+          , href ("#question-" ++ (toString (model.progress + 1)))
           , if model.progress == 9 then style [ ("visibility", "hidden") ] else style []
           , onClick (UpdateProgress  1)
           ] [ text "Next" ]
         ]
-      , section [ id "start" ]
+      , section [ id "question-0" ]
         [ h2 [] [ text "Welcome to Startup Colour" ]
-        , p [] [ text "Answer a few questions to find out what brand colours you should use for your brand-new startup!" ]
+        , p [] [ text "Answer a few questions to find out what colours you should use for your brand-new startup!" ]
         ]
-      , TextInput.view "What is your startup name?" model.name UpdateName
-      , TextInput.view "Where are you located?" model.location UpdateLocation
-      , TextInput.view "Who are your target users?" model.market UpdateMarket
-      , section [ id "disrupted-fields" ]
+      , TextInput.view "question-1" "What is your startup name?" model.name UpdateName
+      , TextInput.view "question-2" "Where are you located?" model.location UpdateLocation
+      , TextInput.view "question-3" "Who are your target users?" model.market UpdateMarket
+      , section [ id "question-4" ]
         [ h2 [] [ text "What fields are you disrupting?" ]
         , div [ class "multi-column" ]
           (model.disruptedFields |> Dict.toList |> List.map disruptingCheckboxes)
         ]
-      , section [ id "revolutionary" ]
+      , section [ id "question-5" ]
         [ h2 [] [ text "Are you revolutionary?"]
         , div [ class "multi-column" ]
           [ RadioInput.view "Yes" "revolutionary" Yes UpdateRevolutionary
           , RadioInput.view "No" "revolutionary" No UpdateRevolutionary
           ]
         ]
-      , section [ id "market" ]
+      , section [ id "question-6" ]
         [ h2 [] [ text "Describe your startup:" ]
         , div [ class "multi-column" ]
           [ RadioInput.view ("Airbnb but for " ++ model.market) "description" Airbnb UpdateDescription
@@ -321,19 +323,19 @@ view model =
           , RadioInput.view ("Uber but for " ++ model.market) "description" Uber UpdateDescription
           ]
         ]
-      , section [ id "office-perks" ]
+      , section [ id "question-7" ]
         [ h2 [] [ text "What perks are available in your office?" ]
         , div [ class "multi-column" ]
           (model.officePerks |> Dict.toList |> List.map perkCheckboxes)
         ]
-      , section [ id "position" ]
+      , section [ id "question-8" ]
         [ h2 [] [ text "Are you a thought-leader or thought-follower?" ]
         , div [ class "multi-column" ]
           [ RadioInput.view "Thought Leader" "position" ThoughtLeader UpdatePosition
           , RadioInput.view "Thought Follower" "position" ThoughtFollower UpdatePosition
           ]
         ]
-      , div []
+      , section [ id "question-9" ]
         [ button [ class "btn-primary", onClick UpdateColor ]
           [ text "Find your color" ]
           , text model.color
@@ -342,7 +344,3 @@ view model =
 
 -- enter to move to next question
 -- autofocus questions
--- before/next buttons
--- loop questions
-
-

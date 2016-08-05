@@ -1,7 +1,21 @@
+@keyframes bg-color {
+    0%    { background-color: $blue; }
+    7%   { background-color: $purple; }
+    25%   { background-color: $red; }
+    41%   { background-color: $orange; }
+    57%   { background-color: $yellow; }
+    73%   { background-color: $green; }
+    90%  { background-color: $blue; }
+}
+
 html {
-  background-color: $red;
-  transition: background-color 3s ease;
+  background-color: $blue;
   color: $white;
+  overflow: hidden;
+  // transition: background-color 3s ease;
+  // animation-name: bg-color;
+  // animation-duration: 6s;
+  // animation-iteration-count: infinite;
 }
 
 .elm-wrapper {
