@@ -24,6 +24,7 @@ html {
   line-height: $line-height;
   height: 100%;
   margin: 0 auto;
+  position: relative;
 
   @media screen and (min-width: $breakpoint-md) {
     width: 80%;
@@ -34,12 +35,26 @@ html {
 
 }
 
-section {
-  padding: $margin;
-  height: 100%;
+.section {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
+  padding: $margin-xl $margin 100px;
+  transition: top .6s ease-in;
+}
+
+.section.active {
+  top: 0;
+}
+
+.section.active ~ .section {
+  top: 100%;
 }
 
 h2,

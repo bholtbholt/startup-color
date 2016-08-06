@@ -86,8 +86,8 @@ model =
             { name = "White-board Walls"
             , checked = False
             }
-        , "Beer Taps" =>
-            { name = "Beer Taps"
+        , "Free Beer & Snacks" =>
+            { name = "Free Beer & Snacks"
             , checked = False
             }
         , "Stand-up Desks" =>
@@ -177,7 +177,7 @@ update msg model =
       { model | description = value }
 
     UpdateColor ->
-      { model | color = "blue" }
+      { model | color = "It's blue." }
 
     UpdateDisruptedField checkboxId checked ->
       let
@@ -220,6 +220,12 @@ view model =
         [ input [ type' "checkbox", checked data.checked, onCheck (UpdateOfficePerks key) ] []
         , text data.name
         ]
+
+    sectionActivator ( number ) =
+      if model.progress == number
+      then "section active"
+      else "section"
+
   in
     div [ class "elm-wrapper" ]
       [ div [ class "progress-bar" ]
@@ -230,42 +236,36 @@ view model =
           ]
         []
       ]
-      , div
-        [ class "progress-buttons"
-        , if model.progress == 9 then style [ ("visibility", "hidden") ] else style []
-        ]
-        [ a
-          [ class "btn-primary"
-          , href ("#question-" ++ (toString (model.progress - 1)))
-          , if model.progress == 0 then style [ ("visibility", "hidden") ] else style []
+      , div [ if model.progress == 9 then class "progress-buttons hidden" else class "progress-buttons" ]
+        [ button
+          [ if model.progress == 0 then class "btn-primary hidden" else class "btn-primary"
           , onClick (UpdateProgress -1)
           ] [ text "Back" ]
-        , a
+        , button
           [ class "btn-primary"
-          , href ("#question-" ++ (toString (model.progress + 1)))
           , onClick (UpdateProgress  1)
           ] [ text "Next" ]
         ]
-      , section [ id "question-0" ]
+      , section [ class (sectionActivator 0) ]
         [ h2 [] [ text "Welcome to Startup Colour" ]
         , p [] [ text "Answer a few questions to find out what colours you should use for your brand-new startup!" ]
         ]
-      , TextInput.view "question-1" "What is your startup name?" model.name UpdateName
-      , TextInput.view "question-2" "Where are you located?" model.location UpdateLocation
-      , TextInput.view "question-3" "Who are your target users?" model.market UpdateMarket
-      , section [ id "question-4" ]
+      , TextInput.view (sectionActivator 1) "What is your startup name?" model.name UpdateName
+      , TextInput.view (sectionActivator 2) "Where are you located?" model.location UpdateLocation
+      , TextInput.view (sectionActivator 3) "Who are your target users?" model.market UpdateMarket
+      , section [ class (sectionActivator 4) ]
         [ h2 [] [ text "What fields are you disrupting?" ]
         , div [ class "multi-column" ]
           (model.disruptedFields |> Dict.toList |> List.map disruptingCheckboxes)
         ]
-      , section [ id "question-5" ]
+      , section [ class (sectionActivator 5) ]
         [ h2 [] [ text "Are you revolutionary?"]
         , div [ class "multi-column" ]
           [ RadioInput.view "Yes" "revolutionary" Yes UpdateRevolutionary
           , RadioInput.view "No" "revolutionary" No UpdateRevolutionary
           ]
         ]
-      , section [ id "question-6" ]
+      , section [ class (sectionActivator 6) ]
         [ h2 [] [ text "Describe your startup:" ]
         , div [ class "multi-column" ]
           [ RadioInput.view ("Airbnb but for " ++ model.market) "description" Airbnb UpdateDescription
@@ -279,19 +279,19 @@ view model =
           , RadioInput.view ("Uber but for " ++ model.market) "description" Uber UpdateDescription
           ]
         ]
-      , section [ id "question-7" ]
+      , section [ class (sectionActivator 7) ]
         [ h2 [] [ text "What perks are available in your office?" ]
         , div [ class "multi-column" ]
           (model.officePerks |> Dict.toList |> List.map perkCheckboxes)
         ]
-      , section [ id "question-8" ]
+      , section [ class (sectionActivator 8) ]
         [ h2 [] [ text "Are you a thought-leader or thought-follower?" ]
         , div [ class "multi-column" ]
           [ RadioInput.view "Thought Leader" "position" ThoughtLeader UpdatePosition
           , RadioInput.view "Thought Follower" "position" ThoughtFollower UpdatePosition
           ]
         ]
-      , section [ id "question-9" ]
+      , section [ class (sectionActivator 9) ]
         [ button [ class "btn-primary", onClick UpdateColor ]
           [ text "Find your color" ]
           , text model.color

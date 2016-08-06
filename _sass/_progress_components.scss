@@ -1,23 +1,26 @@
 .progress-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+
   background-color: $light-white;
   height: $margin;
-  left: 0;
-  position: fixed;
-  right: 0;
 }
 
 .progress-indication {
   background-color: $white;
   height: 100%;
-  transition: width .2s ease-in;
+  transition: width .6s ease-in;
 }
 
 .progress-buttons {
-  bottom: $margin;
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+
   display: flex;
   justify-content: space-between;
   padding: $margin;
-  position: fixed;
   width: 100%;
 
   @media screen and (min-width: $breakpoint-md) {

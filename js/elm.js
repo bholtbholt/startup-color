@@ -7747,12 +7747,12 @@ var _elm_lang$html$Html_Events$Options = F2(
 	});
 
 var _user$project$TextInput$view = F4(
-	function (sectionId, inputLabel, inputValue, action) {
+	function (sectionClass, inputLabel, inputValue, action) {
 		return A2(
 			_elm_lang$html$Html$section,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$id(sectionId)
+					_elm_lang$html$Html_Attributes$class(sectionClass)
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
@@ -7839,7 +7839,7 @@ var _user$project$Main$update = F2(
 			case 'UpdateColor':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{color: 'blue'});
+					{color: 'It\'s blue.'});
 			case 'UpdateDisruptedField':
 				var updateRecord = _elm_lang$core$Maybe$map(
 					function (checkboxData) {
@@ -7965,8 +7965,8 @@ var _user$project$Main$model = {
 				{name: 'White-board Walls', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Beer Taps',
-				{name: 'Beer Taps', checked: false}),
+				'Free Beer & Snacks',
+				{name: 'Free Beer & Snacks', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
 				'Stand-up Desks',
@@ -8024,6 +8024,9 @@ var _user$project$Main$UpdateName = function (a) {
 	return {ctor: 'UpdateName', _0: a};
 };
 var _user$project$Main$view = function (model) {
+	var sectionActivator = function (number) {
+		return _elm_lang$core$Native_Utils.eq(model.progress, number) ? 'section active' : 'section';
+	};
 	var perkCheckboxes = function (_p1) {
 		var _p2 = _p1;
 		var _p3 = _p2._1;
@@ -8112,34 +8115,15 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('progress-buttons'),
-						_elm_lang$core$Native_Utils.eq(model.progress, 9) ? _elm_lang$html$Html_Attributes$style(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								{ctor: '_Tuple2', _0: 'visibility', _1: 'hidden'}
-							])) : _elm_lang$html$Html_Attributes$style(
-						_elm_lang$core$Native_List.fromArray(
-							[]))
+						_elm_lang$core$Native_Utils.eq(model.progress, 9) ? _elm_lang$html$Html_Attributes$class('progress-buttons hidden') : _elm_lang$html$Html_Attributes$class('progress-buttons')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
 						A2(
-						_elm_lang$html$Html$a,
+						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('btn-primary'),
-								_elm_lang$html$Html_Attributes$href(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'#question-',
-									_elm_lang$core$Basics$toString(model.progress - 1))),
-								_elm_lang$core$Native_Utils.eq(model.progress, 0) ? _elm_lang$html$Html_Attributes$style(
-								_elm_lang$core$Native_List.fromArray(
-									[
-										{ctor: '_Tuple2', _0: 'visibility', _1: 'hidden'}
-									])) : _elm_lang$html$Html_Attributes$style(
-								_elm_lang$core$Native_List.fromArray(
-									[])),
+								_elm_lang$core$Native_Utils.eq(model.progress, 0) ? _elm_lang$html$Html_Attributes$class('btn-primary hidden') : _elm_lang$html$Html_Attributes$class('btn-primary'),
 								_elm_lang$html$Html_Events$onClick(
 								_user$project$Main$UpdateProgress(-1))
 							]),
@@ -8148,15 +8132,10 @@ var _user$project$Main$view = function (model) {
 								_elm_lang$html$Html$text('Back')
 							])),
 						A2(
-						_elm_lang$html$Html$a,
+						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$html$Html_Attributes$class('btn-primary'),
-								_elm_lang$html$Html_Attributes$href(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'#question-',
-									_elm_lang$core$Basics$toString(model.progress + 1))),
 								_elm_lang$html$Html_Events$onClick(
 								_user$project$Main$UpdateProgress(1))
 							]),
@@ -8169,7 +8148,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-0')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(0))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8190,14 +8170,30 @@ var _user$project$Main$view = function (model) {
 								_elm_lang$html$Html$text('Answer a few questions to find out what colours you should use for your brand-new startup!')
 							]))
 					])),
-				A4(_user$project$TextInput$view, 'question-1', 'What is your startup name?', model.name, _user$project$Main$UpdateName),
-				A4(_user$project$TextInput$view, 'question-2', 'Where are you located?', model.location, _user$project$Main$UpdateLocation),
-				A4(_user$project$TextInput$view, 'question-3', 'Who are your target users?', model.market, _user$project$Main$UpdateMarket),
+				A4(
+				_user$project$TextInput$view,
+				sectionActivator(1),
+				'What is your startup name?',
+				model.name,
+				_user$project$Main$UpdateName),
+				A4(
+				_user$project$TextInput$view,
+				sectionActivator(2),
+				'Where are you located?',
+				model.location,
+				_user$project$Main$UpdateLocation),
+				A4(
+				_user$project$TextInput$view,
+				sectionActivator(3),
+				'Who are your target users?',
+				model.market,
+				_user$project$Main$UpdateMarket),
 				A2(
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-4')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(4))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8224,7 +8220,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-5')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(5))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8252,7 +8249,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-6')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(6))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8332,7 +8330,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-7')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(7))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8359,7 +8358,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-8')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(8))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8387,7 +8387,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$section,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$id('question-9')
+						_elm_lang$html$Html_Attributes$class(
+						sectionActivator(9))
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[

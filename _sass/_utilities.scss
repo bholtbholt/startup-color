@@ -60,6 +60,10 @@ $margin-position: top bottom left right;
   display: block;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .inline-block {
   display: inline-block;
 }
