@@ -39,8 +39,8 @@ model =
   , color = ""
   , disruptedFields =
       Dict.fromList
-        [ "Automotive" =>
-            { name = "Automotive"
+        [ "Advertising & Marketing" =>
+            { name = "Advertising & Marketing"
             , checked = False
             }
         , "Banking" =>
@@ -49,18 +49,6 @@ model =
             }
         , "Education" =>
             { name = "Education"
-            , checked = False
-            }
-        , "Energy" =>
-            { name = "Energy"
-            , checked = False
-            }
-        , "Fashion" =>
-            { name = "Fashion"
-            , checked = False
-            }
-        , "Film & Television" =>
-            { name = "Film & Television"
             , checked = False
             }
         , "Food" =>
@@ -75,20 +63,8 @@ model =
             { name = "Entertainment"
             , checked = False
             }
-        , "News" =>
-            { name = "News"
-            , checked = False
-            }
         , "Service" =>
             { name = "Service"
-            , checked = False
-            }
-        , "Sports" =>
-            { name = "Sports"
-            , checked = False
-            }
-        , "Technology" =>
-            { name = "Technology"
             , checked = False
             }
         , "Travel & Tourism" =>
@@ -122,20 +98,12 @@ model =
             { name = "Ping Pong Tables"
             , checked = False
             }
-        , "Video Game Console" =>
-            { name = "Video Game Console"
+        , "Arcade Machines" =>
+            { name = "Arcade Machines"
             , checked = False
             }
         , "Foosball" =>
             { name = "Foosball"
-            , checked = False
-            }
-        , "Exposed Pipes & Ceilings" =>
-            { name = "Exposed Pipes & Ceilings"
-            , checked = False
-            }
-        , "Stocked Fridge" =>
-            { name = "Stocked Fridge"
             , checked = False
             }
         , "Bean Bag Chairs" =>
@@ -144,10 +112,6 @@ model =
             }
         , "Nap Room" =>
             { name = "Nap Room"
-            , checked = False
-            }
-        , "Yoga & Meditation Room" =>
-            { name = "Yoga & Meditation Room"
             , checked = False
             }
         ]
@@ -163,17 +127,12 @@ type Revolutionary
 
 type Description
   = Airbnb
-  | Amazon
   | Dropbox
   | Facebook
-  | Google
-  | Instagram
-  | Linkedin
   | Netflix
   | Pinterest
   | Slack
   | Snapchat
-  | Spotify
   | Stripe
   | Uber
 
@@ -271,7 +230,10 @@ view model =
           ]
         []
       ]
-      , div [ class "progress-buttons" ]
+      , div
+        [ class "progress-buttons"
+        , if model.progress == 9 then style [ ("visibility", "hidden") ] else style []
+        ]
         [ a
           [ class "btn-primary"
           , href ("#question-" ++ (toString (model.progress - 1)))
@@ -281,7 +243,6 @@ view model =
         , a
           [ class "btn-primary"
           , href ("#question-" ++ (toString (model.progress + 1)))
-          , if model.progress == 9 then style [ ("visibility", "hidden") ] else style []
           , onClick (UpdateProgress  1)
           ] [ text "Next" ]
         ]
@@ -308,17 +269,12 @@ view model =
         [ h2 [] [ text "Describe your startup:" ]
         , div [ class "multi-column" ]
           [ RadioInput.view ("Airbnb but for " ++ model.market) "description" Airbnb UpdateDescription
-          , RadioInput.view ("Amazon but for " ++ model.market) "description" Amazon UpdateDescription
           , RadioInput.view ("Dropbox but for " ++ model.market) "description" Dropbox UpdateDescription
           , RadioInput.view ("Facebook but for " ++ model.market) "description" Facebook UpdateDescription
-          , RadioInput.view ("Google but for " ++ model.market) "description" Google UpdateDescription
-          , RadioInput.view ("Instagram but for " ++ model.market) "description" Instagram UpdateDescription
-          , RadioInput.view ("Linkedin but for " ++ model.market) "description" Linkedin UpdateDescription
           , RadioInput.view ("Netflix but for " ++ model.market) "description" Netflix UpdateDescription
           , RadioInput.view ("Pinterest but for " ++ model.market) "description" Pinterest UpdateDescription
           , RadioInput.view ("Slack but for " ++ model.market) "description" Slack UpdateDescription
           , RadioInput.view ("Snapchat but for " ++ model.market) "description" Snapchat UpdateDescription
-          , RadioInput.view ("Spotify but for " ++ model.market) "description" Spotify UpdateDescription
           , RadioInput.view ("Stripe but for " ++ model.market) "description" Stripe UpdateDescription
           , RadioInput.view ("Uber but for " ++ model.market) "description" Uber UpdateDescription
           ]
@@ -342,5 +298,7 @@ view model =
         ]
       ]
 
+-- add message before finding colour = Meet startup name, a revolutionary new bla bal
+-- exposing (..)
 -- enter to move to next question
 -- autofocus questions
