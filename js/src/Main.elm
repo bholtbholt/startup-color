@@ -1,11 +1,10 @@
-import Html exposing (..)
+import Html exposing (text, section, h2, div, p, button, label, input)
 import Html.App exposing (beginnerProgram)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html.Attributes exposing (class, style, type', checked)
+import Html.Events exposing (onClick, onCheck)
 import Dict
 import TextInput
 import RadioInput
---import CheckboxInput
 
 (=>) : a -> b -> ( a, b )
 (=>) a b = ( a, b )
@@ -299,6 +298,5 @@ view model =
       ]
 
 -- add message before finding colour = Meet startup name, a revolutionary new bla bal
--- exposing (..)
 -- enter to move to next question
 -- autofocus questions

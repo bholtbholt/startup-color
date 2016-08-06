@@ -1,7 +1,7 @@
 module TextInput exposing (view)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (section, label, input, text)
+import Html.Attributes exposing (class, type', value)
+import Html.Events exposing (onInput)
 
 view sectionClass inputLabel inputValue action =
   section [ class sectionClass ]

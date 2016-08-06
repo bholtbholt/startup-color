@@ -1,7 +1,7 @@
 module CheckboxInput exposing (view)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (label, input, text)
+import Html.Attributes exposing (type', checked)
+import Html.Events exposing (onCheck)
 
 view key data action =
   label []
