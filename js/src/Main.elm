@@ -217,15 +217,6 @@ view model =
       then "section active"
       else "section"
 
-    colorChanger ( number ) =
-      if number == 1 then "bg-blue"
-      else if number == 2 then "bg-purple"
-      else if number == 3 then "bg-red"
-      else if number == 4 then "bg-orange"
-      else if number == 5 then "bg-yellow"
-      else if number == 6 then "bg-green"
-      else ""
-
     revolutionarySummary =
       if model.revolutionary == Yes
       then "revolutionary new"
@@ -252,7 +243,7 @@ view model =
     progressComplete = model.progress == 9
 
   in
-    div [ class ("elm-wrapper " ++ (colorChanger model.progress)) ]
+    div [ class "elm-wrapper" ]
       [ div [ class "progress-bar" ]
         [ div
           [ style [ ("width", ((toString ((toFloat model.progress) / 9 * 100))++ "%")) ]

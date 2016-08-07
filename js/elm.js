@@ -8022,9 +8022,6 @@ var _user$project$Main$view = function (model) {
 	var disruptingSummary = 'disrupting the industries';
 	var positionSummary = _elm_lang$core$Native_Utils.eq(model.position, _user$project$Main$ThoughtLeader) ? 'A thought-leader in their space, ' : 'Following trends set by their peers, ';
 	var revolutionarySummary = _elm_lang$core$Native_Utils.eq(model.revolutionary, _user$project$Main$Yes) ? 'revolutionary new' : 'newest';
-	var colorChanger = function (number) {
-		return _elm_lang$core$Native_Utils.eq(number, 1) ? 'bg-blue' : (_elm_lang$core$Native_Utils.eq(number, 2) ? 'bg-purple' : (_elm_lang$core$Native_Utils.eq(number, 3) ? 'bg-red' : (_elm_lang$core$Native_Utils.eq(number, 4) ? 'bg-orange' : (_elm_lang$core$Native_Utils.eq(number, 5) ? 'bg-yellow' : (_elm_lang$core$Native_Utils.eq(number, 6) ? 'bg-green' : '')))));
-	};
 	var sectionActivator = function (number) {
 		return _elm_lang$core$Native_Utils.eq(model.progress, number) ? 'section active' : 'section';
 	};
@@ -8078,11 +8075,7 @@ var _user$project$Main$view = function (model) {
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'elm-wrapper ',
-					colorChanger(model.progress)))
+				_elm_lang$html$Html_Attributes$class('elm-wrapper')
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
