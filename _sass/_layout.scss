@@ -1,38 +1,14 @@
-@keyframes bg-color {
-    0%    { background-color: $blue; }
-    7%   { background-color: $purple; }
-    25%   { background-color: $red; }
-    41%   { background-color: $orange; }
-    57%   { background-color: $yellow; }
-    73%   { background-color: $green; }
-    90%  { background-color: $blue; }
-}
-
-html {
-  background-color: $blue;
-  color: $white;
-  overflow: hidden;
-  // transition: background-color 3s ease;
-  // animation-name: bg-color;
-  // animation-duration: 6s;
-  // animation-iteration-count: infinite;
-}
-
 .elm-wrapper {
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+  background-color: $purple;
+  transition: background-color 3s ease;
+
+  color: $white;
   font-family: Verdana, Geneva, sans-serif;
   font-size: $font-size;
   line-height: $line-height;
-  height: 100%;
-  margin: 0 auto;
-  position: relative;
-
-  @media screen and (min-width: $breakpoint-md) {
-    width: 80%;
-  }
-  @media screen and (min-width: $breakpoint-lg) {
-    width: 70%;
-  }
-
 }
 
 .section {
@@ -40,6 +16,7 @@ html {
   top: -100%;
   left: 0;
   right: 0;
+  margin: 0 auto;
 
   display: flex;
   flex-direction: column;
@@ -47,6 +24,13 @@ html {
   height: 100%;
   padding: $margin-xl $margin 100px;
   transition: top .6s ease-in;
+
+  @media screen and (min-width: $breakpoint-md) {
+    width: 80%;
+  }
+  @media screen and (min-width: $breakpoint-lg) {
+    width: 70%;
+  }
 }
 
 .section.active {
@@ -77,9 +61,6 @@ h2,
 
   @media screen and (min-width: $breakpoint-sm) {
     flex: 0 1 50%;
-  }
-  @media screen and (min-width: $breakpoint-md) {
-    flex: 0 1 33%;
   }
 }
 

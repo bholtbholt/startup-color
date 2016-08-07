@@ -7929,10 +7929,6 @@ var _user$project$Main$model = {
 				{name: 'Education', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Food',
-				{name: 'Food', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
 				'Health',
 				{name: 'Health', checked: false}),
 				A2(
@@ -7985,10 +7981,6 @@ var _user$project$Main$model = {
 				{name: 'Foosball', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Bean Bag Chairs',
-				{name: 'Bean Bag Chairs', checked: false}),
-				A2(
-				_user$project$Main_ops['=>'],
 				'Nap Room',
 				{name: 'Nap Room', checked: false})
 			]))
@@ -8024,6 +8016,15 @@ var _user$project$Main$UpdateName = function (a) {
 	return {ctor: 'UpdateName', _0: a};
 };
 var _user$project$Main$view = function (model) {
+	var progressComplete = _elm_lang$core$Native_Utils.eq(model.progress, 9);
+	var questionsComplete = _elm_lang$core$Native_Utils.eq(model.progress, 8);
+	var progressStart = _elm_lang$core$Native_Utils.eq(model.progress, 0);
+	var disruptingSummary = 'disrupting the industries';
+	var positionSummary = _elm_lang$core$Native_Utils.eq(model.position, _user$project$Main$ThoughtLeader) ? 'A thought-leader in their space, ' : 'Following trends set by their peers, ';
+	var revolutionarySummary = _elm_lang$core$Native_Utils.eq(model.revolutionary, _user$project$Main$Yes) ? 'revolutionary new' : 'newest';
+	var colorChanger = function (number) {
+		return _elm_lang$core$Native_Utils.eq(number, 1) ? 'bg-blue' : (_elm_lang$core$Native_Utils.eq(number, 2) ? 'bg-purple' : (_elm_lang$core$Native_Utils.eq(number, 3) ? 'bg-red' : (_elm_lang$core$Native_Utils.eq(number, 4) ? 'bg-orange' : (_elm_lang$core$Native_Utils.eq(number, 5) ? 'bg-yellow' : (_elm_lang$core$Native_Utils.eq(number, 6) ? 'bg-green' : '')))));
+	};
 	var sectionActivator = function (number) {
 		return _elm_lang$core$Native_Utils.eq(model.progress, number) ? 'section active' : 'section';
 	};
@@ -8077,7 +8078,11 @@ var _user$project$Main$view = function (model) {
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('elm-wrapper')
+				_elm_lang$html$Html_Attributes$class(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'elm-wrapper ',
+					colorChanger(model.progress)))
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
@@ -8115,7 +8120,7 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$core$Native_Utils.eq(model.progress, 9) ? _elm_lang$html$Html_Attributes$class('progress-buttons hidden') : _elm_lang$html$Html_Attributes$class('progress-buttons')
+						progressComplete ? _elm_lang$html$Html_Attributes$class('progress-buttons hidden') : _elm_lang$html$Html_Attributes$class('progress-buttons')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8123,7 +8128,7 @@ var _user$project$Main$view = function (model) {
 						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$core$Native_Utils.eq(model.progress, 0) ? _elm_lang$html$Html_Attributes$class('btn-primary hidden') : _elm_lang$html$Html_Attributes$class('btn-primary'),
+								progressStart ? _elm_lang$html$Html_Attributes$class('btn-primary hidden') : _elm_lang$html$Html_Attributes$class('btn-primary'),
 								_elm_lang$html$Html_Events$onClick(
 								_user$project$Main$UpdateProgress(-1))
 							]),
@@ -8141,7 +8146,8 @@ var _user$project$Main$view = function (model) {
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Next')
+								_elm_lang$html$Html$text(
+								progressStart ? 'Get Started' : (questionsComplete ? 'Complete' : 'Next'))
 							]))
 					])),
 				A2(
@@ -8159,7 +8165,7 @@ var _user$project$Main$view = function (model) {
 							[]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Welcome to Startup Colour')
+								_elm_lang$html$Html$text('Welcome to Startup Colour.')
 							])),
 						A2(
 						_elm_lang$html$Html$p,
@@ -8167,13 +8173,13 @@ var _user$project$Main$view = function (model) {
 							[]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Answer a few questions to find out what colours you should use for your brand-new startup!')
+								_elm_lang$html$Html$text('8 questions to define your startup\'s brand.')
 							]))
 					])),
 				A4(
 				_user$project$TextInput$view,
 				sectionActivator(1),
-				'What is your startup name?',
+				'What is your startup\'s name?',
 				model.name,
 				_user$project$Main$UpdateName),
 				A4(
@@ -8233,17 +8239,8 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('Are you revolutionary?')
 							])),
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('multi-column')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A4(_user$project$RadioInput$view, 'Yes', 'revolutionary', _user$project$Main$Yes, _user$project$Main$UpdateRevolutionary),
-								A4(_user$project$RadioInput$view, 'No', 'revolutionary', _user$project$Main$No, _user$project$Main$UpdateRevolutionary)
-							]))
+						A4(_user$project$RadioInput$view, 'Yes', 'revolutionary', _user$project$Main$Yes, _user$project$Main$UpdateRevolutionary),
+						A4(_user$project$RadioInput$view, 'No', 'revolutionary', _user$project$Main$No, _user$project$Main$UpdateRevolutionary)
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -8341,7 +8338,7 @@ var _user$project$Main$view = function (model) {
 							[]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('What perks are available in your office?')
+								_elm_lang$html$Html$text('What are your office perks?')
 							])),
 						A2(
 						_elm_lang$html$Html$div,
@@ -8371,17 +8368,8 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('Are you a thought-leader or thought-follower?')
 							])),
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('multi-column')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A4(_user$project$RadioInput$view, 'Thought Leader', 'position', _user$project$Main$ThoughtLeader, _user$project$Main$UpdatePosition),
-								A4(_user$project$RadioInput$view, 'Thought Follower', 'position', _user$project$Main$ThoughtFollower, _user$project$Main$UpdatePosition)
-							]))
+						A4(_user$project$RadioInput$view, 'Thought Leader', 'position', _user$project$Main$ThoughtLeader, _user$project$Main$UpdatePosition),
+						A4(_user$project$RadioInput$view, 'Thought Follower', 'position', _user$project$Main$ThoughtFollower, _user$project$Main$UpdatePosition)
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -8392,6 +8380,57 @@ var _user$project$Main$view = function (model) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'Meet ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										model.name,
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											', the ',
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												revolutionarySummary,
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													' startup from ',
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														model.location,
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'. ',
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																positionSummary,
+																A2(
+																	_elm_lang$core$Basics_ops['++'],
+																	model.name,
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		' is ',
+																		A2(
+																			_elm_lang$core$Basics_ops['++'],
+																			disruptingSummary,
+																			A2(
+																				_elm_lang$core$Basics_ops['++'],
+																				'They\'re just like ',
+																				A2(
+																					_elm_lang$core$Basics_ops['++'],
+																					_elm_lang$core$Basics$toString(model.description),
+																					A2(
+																						_elm_lang$core$Basics_ops['++'],
+																						' but for ',
+																						A2(_elm_lang$core$Basics_ops['++'], model.market, '.'))))))))))))))))
+							])),
 						A2(
 						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(

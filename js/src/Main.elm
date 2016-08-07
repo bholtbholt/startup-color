@@ -50,10 +50,6 @@ model =
             { name = "Education"
             , checked = False
             }
-        , "Food" =>
-            { name = "Food"
-            , checked = False
-            }
         , "Health" =>
             { name = "Health"
             , checked = False
@@ -103,10 +99,6 @@ model =
             }
         , "Foosball" =>
             { name = "Foosball"
-            , checked = False
-            }
-        , "Bean Bag Chairs" =>
-            { name = "Bean Bag Chairs"
             , checked = False
             }
         , "Nap Room" =>
@@ -225,31 +217,67 @@ view model =
       then "section active"
       else "section"
 
+    colorChanger ( number ) =
+      if number == 1 then "bg-blue"
+      else if number == 2 then "bg-purple"
+      else if number == 3 then "bg-red"
+      else if number == 4 then "bg-orange"
+      else if number == 5 then "bg-yellow"
+      else if number == 6 then "bg-green"
+      else ""
+
+    revolutionarySummary =
+      if model.revolutionary == Yes
+      then "revolutionary new"
+      else "newest"
+
+    positionSummary =
+      if model.position == ThoughtLeader
+      then "A thought-leader in their space, "
+      else "Following trends set by their peers, "
+
+    disruptingSummary =
+      "disrupting the industries"
+
+    --perksSummary =
+    --  if model.officePerks.size < 3
+    --  then "Their office is quaint with all the startup necessities, "
+    --  else if model.officePerks.size < 6
+    --  then "They're in a great space with all the regular startup perks, "
+    --  else "They're a full-blown startup with "
+
+
+    progressStart = model.progress == 0
+    questionsComplete = model.progress == 8
+    progressComplete = model.progress == 9
+
   in
-    div [ class "elm-wrapper" ]
+    div [ class ("elm-wrapper " ++ (colorChanger model.progress)) ]
       [ div [ class "progress-bar" ]
         [ div
-          [ style
-            [ ("width", ((toString ((toFloat model.progress) / 9 * 100))++ "%")) ]
+          [ style [ ("width", ((toString ((toFloat model.progress) / 9 * 100))++ "%")) ]
           , class "progress-indication"
-          ]
-        []
-      ]
-      , div [ if model.progress == 9 then class "progress-buttons hidden" else class "progress-buttons" ]
+          ] []
+        ]
+      , div [ if progressComplete then class "progress-buttons hidden" else class "progress-buttons" ]
         [ button
-          [ if model.progress == 0 then class "btn-primary hidden" else class "btn-primary"
+          [ if progressStart then class "btn-primary hidden" else class "btn-primary"
           , onClick (UpdateProgress -1)
           ] [ text "Back" ]
         , button
           [ class "btn-primary"
           , onClick (UpdateProgress  1)
-          ] [ text "Next" ]
+          ] [ text (
+              if progressStart then "Get Started"
+              else if questionsComplete then "Complete"
+              else "Next" )
+            ]
         ]
       , section [ class (sectionActivator 0) ]
-        [ h2 [] [ text "Welcome to Startup Colour" ]
-        , p [] [ text "Answer a few questions to find out what colours you should use for your brand-new startup!" ]
+        [ h2 [] [ text "Welcome to Startup Colour." ]
+        , p [] [ text "8 questions to define your startup's brand." ]
         ]
-      , TextInput.view (sectionActivator 1) "What is your startup name?" model.name UpdateName
+      , TextInput.view (sectionActivator 1) "What is your startup's name?" model.name UpdateName
       , TextInput.view (sectionActivator 2) "Where are you located?" model.location UpdateLocation
       , TextInput.view (sectionActivator 3) "Who are your target users?" model.market UpdateMarket
       , section [ class (sectionActivator 4) ]
@@ -259,10 +287,8 @@ view model =
         ]
       , section [ class (sectionActivator 5) ]
         [ h2 [] [ text "Are you revolutionary?"]
-        , div [ class "multi-column" ]
-          [ RadioInput.view "Yes" "revolutionary" Yes UpdateRevolutionary
-          , RadioInput.view "No" "revolutionary" No UpdateRevolutionary
-          ]
+        , RadioInput.view "Yes" "revolutionary" Yes UpdateRevolutionary
+        , RadioInput.view "No" "revolutionary" No UpdateRevolutionary
         ]
       , section [ class (sectionActivator 6) ]
         [ h2 [] [ text "Describe your startup:" ]
@@ -279,19 +305,40 @@ view model =
           ]
         ]
       , section [ class (sectionActivator 7) ]
-        [ h2 [] [ text "What perks are available in your office?" ]
+        [ h2 [] [ text "What are your office perks?" ]
         , div [ class "multi-column" ]
           (model.officePerks |> Dict.toList |> List.map perkCheckboxes)
         ]
       , section [ class (sectionActivator 8) ]
         [ h2 [] [ text "Are you a thought-leader or thought-follower?" ]
-        , div [ class "multi-column" ]
-          [ RadioInput.view "Thought Leader" "position" ThoughtLeader UpdatePosition
-          , RadioInput.view "Thought Follower" "position" ThoughtFollower UpdatePosition
-          ]
+        , RadioInput.view "Thought Leader" "position" ThoughtLeader UpdatePosition
+        , RadioInput.view "Thought Follower" "position" ThoughtFollower UpdatePosition
         ]
       , section [ class (sectionActivator 9) ]
-        [ button [ class "btn-primary", onClick UpdateColor ]
+        [ p []
+          [ text
+            ( "Meet "
+            ++ model.name -- StartupColor
+            ++ ", the "
+            ++ revolutionarySummary -- revolutionary new
+            ++ " startup from "
+            ++ model.location -- Vancouver
+            --++ (toString (model.officePerks |> Dict.toList |> List.map .checked officePerks))
+            --++ (get "White-board Walls" model.officePerks.length)
+            --++ officePerksSummary
+            ++ ". "
+            ++ positionSummary -- A thought-leader in their space
+            ++ model.name -- StartupColor
+            ++ " is "
+            ++ disruptingSummary -- disrupting the tech industry.
+            ++ "They're just like "
+            ++ (toString model.description) -- Airbnb
+            ++ " but for "
+            ++ model.market -- people who tech
+            ++ "."
+            )
+          ]
+        , button [ class "btn-primary", onClick UpdateColor ]
           [ text "Find your color" ]
           , text model.color
         ]
