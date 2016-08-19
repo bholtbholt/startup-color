@@ -2,6 +2,7 @@ import Html exposing (text, section, h2, div, p, button, label, input)
 import Html.App exposing (beginnerProgram)
 import Html.Attributes exposing (class, style, type', checked)
 import Html.Events exposing (onClick, onCheck)
+import String
 import Dict
 import TextInput
 import RadioInput
@@ -212,6 +213,16 @@ view model =
         , text data.name
         ]
 
+    returnPerkList perks
+      =  perks
+      |> Dict.toList
+      |> List.filterMap
+         (\ (name, perk) ->
+           if perk.checked
+           then Just name
+           else Nothing
+         )
+
     sectionActivator ( number ) =
       if model.progress == number
       then "section active"
@@ -230,12 +241,22 @@ view model =
     disruptingSummary =
       "disrupting the industries"
 
-    --perksSummary =
-    --  if model.officePerks.size < 3
-    --  then "Their office is quaint with all the startup necessities, "
-    --  else if model.officePerks.size < 6
-    --  then "They're in a great space with all the regular startup perks, "
-    --  else "They're a full-blown startup with "
+    officePerksSummary perkList =
+      if List.length perkList == 0
+      then "Their office is still coming together, but is promising"
+      else if List.length perkList == 1
+      then "Their office is still coming together, but they've spared no expense to provide " ++ (String.concat perkList) ++ " for their team"
+      else if List.length perkList == 2
+      then "Their office is quaint with all the startup necessities, " ++ (String.join " and " perkList)
+      else if List.length perkList < 5
+      then "They're in a great space with all the regular startup perks, " ++ (String.join ", " perkList)
+      else "They're a full-blown startup with " ++ (String.join ", " perkList)
+
+    -- create helper to handle: __ and __
+
+    --joinWithAnd list =
+      --take list (List.length list - 1)
+
 
 
     progressStart = model.progress == 0
@@ -314,9 +335,8 @@ view model =
             ++ revolutionarySummary -- revolutionary new
             ++ " startup from "
             ++ model.location -- Vancouver
-            --++ (toString (model.officePerks |> Dict.toList |> List.map .checked officePerks))
-            --++ (get "White-board Walls" model.officePerks.length)
-            --++ officePerksSummary
+            ++ ". "
+            ++ (officePerksSummary (returnPerkList model.officePerks))
             ++ ". "
             ++ positionSummary -- A thought-leader in their space
             ++ model.name -- StartupColor
