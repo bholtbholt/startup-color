@@ -7839,7 +7839,7 @@ var _user$project$Main$update = F2(
 			case 'UpdateColor':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{color: 'It\'s blue.'});
+					{color: 'Blue.'});
 			case 'UpdateDisruptedField':
 				var updateRecord = _elm_lang$core$Maybe$map(
 					function (checkboxData) {
@@ -7981,8 +7981,8 @@ var _user$project$Main$model = {
 				{name: 'Foosball', checked: false}),
 				A2(
 				_user$project$Main_ops['=>'],
-				'Nap Room',
-				{name: 'Nap Room', checked: false})
+				'Nap Pods',
+				{name: 'Nap Pods', checked: false})
 			]))
 };
 var _user$project$Main$UpdateProgress = function (a) {
@@ -8019,15 +8019,108 @@ var _user$project$Main$view = function (model) {
 	var progressComplete = _elm_lang$core$Native_Utils.eq(model.progress, 9);
 	var questionsComplete = _elm_lang$core$Native_Utils.eq(model.progress, 8);
 	var progressStart = _elm_lang$core$Native_Utils.eq(model.progress, 0);
-	var disruptingSummary = 'disrupting the industries';
+	var joinWithAnd = function (list) {
+		return A2(
+			_elm_lang$core$String$join,
+			' ',
+			A2(
+				_elm_lang$core$List$append,
+				_elm_lang$core$Native_List.fromArray(
+					[', and']),
+				A2(
+					_elm_lang$core$List$drop,
+					_elm_lang$core$List$length(list) - 1,
+					list)));
+	};
+	var joinWithCommas = function (list) {
+		return A2(
+			_elm_lang$core$String$join,
+			', ',
+			A2(
+				_elm_lang$core$List$take,
+				_elm_lang$core$List$length(list) - 1,
+				list));
+	};
+	var joinOxfordComma = function (list) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			joinWithCommas(list),
+			joinWithAnd(list));
+	};
+	var officePerksSummary = function (perkList) {
+		return _elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$List$length(perkList),
+			0) ? 'Their office is still coming together, but it\'s promising' : (_elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$List$length(perkList),
+			1) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Their office is still coming together, and they\'ve spared no expense to provide ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$String$concat(perkList),
+				' for their team')) : (_elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$List$length(perkList),
+			2) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'They have a quaint office with all the startup necessities, like ',
+			A2(_elm_lang$core$String$join, ' and ', perkList)) : ((_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$List$length(perkList),
+			6) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'They\'re in a great space with all the typical startup perks, ',
+			joinOxfordComma(perkList)) : A2(
+			_elm_lang$core$Basics_ops['++'],
+			'They\'re a full-blown startup with ',
+			joinOxfordComma(perkList)))));
+	};
+	var disruptingSummary = function (fields) {
+		return _elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$List$length(fields),
+			0) ? ' aims to provide \"can\'t live without\" service' : (_elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$List$length(fields),
+			1) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			' is focused on disrupting the ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$String$concat(fields),
+				' industry')) : (_elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$List$length(fields),
+			2) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			' is disrupting the ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(_elm_lang$core$String$join, ' and ', fields),
+				' industries')) : A2(
+			_elm_lang$core$Basics_ops['++'],
+			' is a disruptive force, crushing the ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				joinOxfordComma(fields),
+				' industries'))));
+	};
 	var positionSummary = _elm_lang$core$Native_Utils.eq(model.position, _user$project$Main$ThoughtLeader) ? 'A thought-leader in their space, ' : 'Following trends set by their peers, ';
 	var revolutionarySummary = _elm_lang$core$Native_Utils.eq(model.revolutionary, _user$project$Main$Yes) ? 'revolutionary new' : 'newest';
+	var bgColorActivator = F2(
+		function (ifTrue, ifFalse) {
+			return _elm_lang$core$String$isEmpty(model.color) ? _elm_lang$html$Html_Attributes$class(ifTrue) : _elm_lang$html$Html_Attributes$class(ifFalse);
+		});
 	var sectionActivator = function (number) {
 		return _elm_lang$core$Native_Utils.eq(model.progress, number) ? 'section active' : 'section';
 	};
-	var perkCheckboxes = function (_p1) {
-		var _p2 = _p1;
-		var _p3 = _p2._1;
+	var returnCheckedList = function (list) {
+		return A2(
+			_elm_lang$core$List$filterMap,
+			function (_p1) {
+				var _p2 = _p1;
+				return _p2._1.checked ? _elm_lang$core$Maybe$Just(_p2._0) : _elm_lang$core$Maybe$Nothing;
+			},
+			_elm_lang$core$Dict$toList(list));
+	};
+	var perkCheckboxes = function (_p3) {
+		var _p4 = _p3;
+		var _p5 = _p4._1;
 		return A2(
 			_elm_lang$html$Html$label,
 			_elm_lang$core$Native_List.fromArray(
@@ -8039,18 +8132,18 @@ var _user$project$Main$view = function (model) {
 					_elm_lang$core$Native_List.fromArray(
 						[
 							_elm_lang$html$Html_Attributes$type$('checkbox'),
-							_elm_lang$html$Html_Attributes$checked(_p3.checked),
+							_elm_lang$html$Html_Attributes$checked(_p5.checked),
 							_elm_lang$html$Html_Events$onCheck(
-							_user$project$Main$UpdateOfficePerks(_p2._0))
+							_user$project$Main$UpdateOfficePerks(_p4._0))
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[])),
-					_elm_lang$html$Html$text(_p3.name)
+					_elm_lang$html$Html$text(_p5.name)
 				]));
 	};
-	var disruptingCheckboxes = function (_p4) {
-		var _p5 = _p4;
-		var _p6 = _p5._1;
+	var disruptingCheckboxes = function (_p6) {
+		var _p7 = _p6;
+		var _p8 = _p7._1;
 		return A2(
 			_elm_lang$html$Html$label,
 			_elm_lang$core$Native_List.fromArray(
@@ -8062,20 +8155,20 @@ var _user$project$Main$view = function (model) {
 					_elm_lang$core$Native_List.fromArray(
 						[
 							_elm_lang$html$Html_Attributes$type$('checkbox'),
-							_elm_lang$html$Html_Attributes$checked(_p6.checked),
+							_elm_lang$html$Html_Attributes$checked(_p8.checked),
 							_elm_lang$html$Html_Events$onCheck(
-							_user$project$Main$UpdateDisruptedField(_p5._0))
+							_user$project$Main$UpdateDisruptedField(_p7._0))
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[])),
-					_elm_lang$html$Html$text(_p6.name)
+					_elm_lang$html$Html$text(_p8.name)
 				]));
 	};
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('elm-wrapper')
+				A2(bgColorActivator, 'elm-wrapper', 'elm-wrapper bg-blue')
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
@@ -8252,69 +8345,60 @@ var _user$project$Main$view = function (model) {
 							[
 								_elm_lang$html$Html$text('Describe your startup:')
 							])),
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('multi-column')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Airbnb but for ', model.market),
-								'description',
-								_user$project$Main$Airbnb,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Dropbox but for ', model.market),
-								'description',
-								_user$project$Main$Dropbox,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Facebook but for ', model.market),
-								'description',
-								_user$project$Main$Facebook,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Netflix but for ', model.market),
-								'description',
-								_user$project$Main$Netflix,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Pinterest but for ', model.market),
-								'description',
-								_user$project$Main$Pinterest,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Slack but for ', model.market),
-								'description',
-								_user$project$Main$Slack,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Snapchat but for ', model.market),
-								'description',
-								_user$project$Main$Snapchat,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Stripe but for ', model.market),
-								'description',
-								_user$project$Main$Stripe,
-								_user$project$Main$UpdateDescription),
-								A4(
-								_user$project$RadioInput$view,
-								A2(_elm_lang$core$Basics_ops['++'], 'Uber but for ', model.market),
-								'description',
-								_user$project$Main$Uber,
-								_user$project$Main$UpdateDescription)
-							]))
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Airbnb but for ', model.market),
+						'description',
+						_user$project$Main$Airbnb,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Dropbox but for ', model.market),
+						'description',
+						_user$project$Main$Dropbox,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Facebook but for ', model.market),
+						'description',
+						_user$project$Main$Facebook,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Netflix but for ', model.market),
+						'description',
+						_user$project$Main$Netflix,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Pinterest but for ', model.market),
+						'description',
+						_user$project$Main$Pinterest,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Slack but for ', model.market),
+						'description',
+						_user$project$Main$Slack,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Snapchat but for ', model.market),
+						'description',
+						_user$project$Main$Snapchat,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Stripe but for ', model.market),
+						'description',
+						_user$project$Main$Stripe,
+						_user$project$Main$UpdateDescription),
+						A4(
+						_user$project$RadioInput$view,
+						A2(_elm_lang$core$Basics_ops['++'], 'Uber but for ', model.market),
+						'description',
+						_user$project$Main$Uber,
+						_user$project$Main$UpdateDescription)
 					])),
 				A2(
 				_elm_lang$html$Html$section,
@@ -8376,7 +8460,9 @@ var _user$project$Main$view = function (model) {
 						A2(
 						_elm_lang$html$Html$p,
 						_elm_lang$core$Native_List.fromArray(
-							[]),
+							[
+								_elm_lang$html$Html_Attributes$class('summary')
+							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$html$Html$text(
@@ -8403,39 +8489,64 @@ var _user$project$Main$view = function (model) {
 															'. ',
 															A2(
 																_elm_lang$core$Basics_ops['++'],
-																positionSummary,
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	model.name,
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		' is ',
-																		A2(
-																			_elm_lang$core$Basics_ops['++'],
-																			disruptingSummary,
-																			A2(
-																				_elm_lang$core$Basics_ops['++'],
-																				'They\'re just like ',
-																				A2(
-																					_elm_lang$core$Basics_ops['++'],
-																					_elm_lang$core$Basics$toString(model.description),
-																					A2(
-																						_elm_lang$core$Basics_ops['++'],
-																						' but for ',
-																						A2(_elm_lang$core$Basics_ops['++'], model.market, '.'))))))))))))))))
+																officePerksSummary(
+																	returnCheckedList(model.officePerks)),
+																'. ')))))))))
+							])),
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('summary')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									positionSummary,
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										model.name,
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											disruptingSummary(
+												returnCheckedList(model.disruptedFields)),
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'. ',
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'They\'re just like ',
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														_elm_lang$core$Basics$toString(model.description),
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															' but for ',
+															A2(_elm_lang$core$Basics_ops['++'], model.market, '.')))))))))
 							])),
 						A2(
 						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('btn-primary'),
+								A2(bgColorActivator, 'btn-primary', 'hide'),
 								_elm_lang$html$Html_Events$onClick(_user$project$Main$UpdateColor)
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$html$Html$text('Find your color')
 							])),
-						_elm_lang$html$Html$text(model.color)
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(bgColorActivator, 'answer invisible', 'answer')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(model.color)
+							]))
 					]))
 			]));
 };

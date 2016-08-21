@@ -102,8 +102,8 @@ model =
             { name = "Foosball"
             , checked = False
             }
-        , "Nap Room" =>
-            { name = "Nap Room"
+        , "Nap Pods" =>
+            { name = "Nap Pods"
             , checked = False
             }
         ]
@@ -169,7 +169,7 @@ update msg model =
       { model | description = value }
 
     UpdateColor ->
-      { model | color = "It's blue." }
+      { model | color = "Blue." }
 
     UpdateDisruptedField checkboxId checked ->
       let
@@ -213,8 +213,8 @@ view model =
         , text data.name
         ]
 
-    returnPerkList perks
-      =  perks
+    returnCheckedList list
+      =  list
       |> Dict.toList
       |> List.filterMap
          (\ (name, perk) ->
@@ -223,10 +223,15 @@ view model =
            else Nothing
          )
 
-    sectionActivator ( number ) =
+    sectionActivator number =
       if model.progress == number
       then "section active"
       else "section"
+
+    bgColorActivator ifTrue ifFalse =
+      if (String.isEmpty model.color)
+      then class ifTrue
+      else class ifFalse
 
     revolutionarySummary =
       if model.revolutionary == Yes
@@ -238,33 +243,46 @@ view model =
       then "A thought-leader in their space, "
       else "Following trends set by their peers, "
 
-    disruptingSummary =
-      "disrupting the industries"
+    disruptingSummary fields =
+      if List.length fields == 0
+      then " aims to provide \"can't live without\" service"
+      else if List.length fields == 1
+      then " is focused on disrupting the " ++ (String.concat fields) ++ " industry"
+      else if List.length fields == 2
+      then " is disrupting the " ++ (String.join " and " fields) ++ " industries"
+      else " is a disruptive force, crushing the " ++ (joinOxfordComma fields)  ++ " industries"
 
     officePerksSummary perkList =
       if List.length perkList == 0
-      then "Their office is still coming together, but is promising"
+      then "Their office is still coming together, but it's promising"
       else if List.length perkList == 1
-      then "Their office is still coming together, but they've spared no expense to provide " ++ (String.concat perkList) ++ " for their team"
+      then "Their office is still coming together, and they've spared no expense to provide " ++ (String.concat perkList) ++ " for their team"
       else if List.length perkList == 2
-      then "Their office is quaint with all the startup necessities, " ++ (String.join " and " perkList)
-      else if List.length perkList < 5
-      then "They're in a great space with all the regular startup perks, " ++ (String.join ", " perkList)
-      else "They're a full-blown startup with " ++ (String.join ", " perkList)
+      then "They have a quaint office with all the startup necessities, like " ++ (String.join " and " perkList)
+      else if List.length perkList < 6
+      then "They're in a great space with all the typical startup perks, " ++ (joinOxfordComma perkList)
+      else "They're a full-blown startup with " ++ (joinOxfordComma perkList)
 
-    -- create helper to handle: __ and __
+    joinWithCommas list
+      =  list
+      |> List.take (List.length list - 1)
+      |> String.join ", "
 
-    --joinWithAnd list =
-      --take list (List.length list - 1)
+    joinWithAnd list
+      = list
+      |> List.drop (List.length list - 1)
+      |> List.append [", and"]
+      |> String.join " "
 
-
+    joinOxfordComma list
+      = (joinWithCommas list) ++ (joinWithAnd list)
 
     progressStart = model.progress == 0
     questionsComplete = model.progress == 8
     progressComplete = model.progress == 9
 
   in
-    div [ class "elm-wrapper" ]
+    div [ bgColorActivator "elm-wrapper" "elm-wrapper bg-blue" ]
       [ div [ class "progress-bar" ]
         [ div
           [ style [ ("width", ((toString ((toFloat model.progress) / 9 * 100))++ "%")) ]
@@ -304,17 +322,15 @@ view model =
         ]
       , section [ class (sectionActivator 6) ]
         [ h2 [] [ text "Describe your startup:" ]
-        , div [ class "multi-column" ]
-          [ RadioInput.view ("Airbnb but for " ++ model.market) "description" Airbnb UpdateDescription
-          , RadioInput.view ("Dropbox but for " ++ model.market) "description" Dropbox UpdateDescription
-          , RadioInput.view ("Facebook but for " ++ model.market) "description" Facebook UpdateDescription
-          , RadioInput.view ("Netflix but for " ++ model.market) "description" Netflix UpdateDescription
-          , RadioInput.view ("Pinterest but for " ++ model.market) "description" Pinterest UpdateDescription
-          , RadioInput.view ("Slack but for " ++ model.market) "description" Slack UpdateDescription
-          , RadioInput.view ("Snapchat but for " ++ model.market) "description" Snapchat UpdateDescription
-          , RadioInput.view ("Stripe but for " ++ model.market) "description" Stripe UpdateDescription
-          , RadioInput.view ("Uber but for " ++ model.market) "description" Uber UpdateDescription
-          ]
+        , RadioInput.view ("Airbnb but for " ++ model.market) "description" Airbnb UpdateDescription
+        , RadioInput.view ("Dropbox but for " ++ model.market) "description" Dropbox UpdateDescription
+        , RadioInput.view ("Facebook but for " ++ model.market) "description" Facebook UpdateDescription
+        , RadioInput.view ("Netflix but for " ++ model.market) "description" Netflix UpdateDescription
+        , RadioInput.view ("Pinterest but for " ++ model.market) "description" Pinterest UpdateDescription
+        , RadioInput.view ("Slack but for " ++ model.market) "description" Slack UpdateDescription
+        , RadioInput.view ("Snapchat but for " ++ model.market) "description" Snapchat UpdateDescription
+        , RadioInput.view ("Stripe but for " ++ model.market) "description" Stripe UpdateDescription
+        , RadioInput.view ("Uber but for " ++ model.market) "description" Uber UpdateDescription
         ]
       , section [ class (sectionActivator 7) ]
         [ h2 [] [ text "What are your office perks?" ]
@@ -327,7 +343,7 @@ view model =
         , RadioInput.view "Thought Follower" "position" ThoughtFollower UpdatePosition
         ]
       , section [ class (sectionActivator 9) ]
-        [ p []
+        [ p [ class "summary" ]
           [ text
             ( "Meet "
             ++ model.name -- StartupColor
@@ -336,12 +352,16 @@ view model =
             ++ " startup from "
             ++ model.location -- Vancouver
             ++ ". "
-            ++ (officePerksSummary (returnPerkList model.officePerks))
+            ++ (officePerksSummary (returnCheckedList model.officePerks))
             ++ ". "
-            ++ positionSummary -- A thought-leader in their space
+            )
+          ]
+        , p [ class "summary" ]
+          [ text
+            (  positionSummary -- A thought-leader in their space
             ++ model.name -- StartupColor
-            ++ " is "
-            ++ disruptingSummary -- disrupting the tech industry.
+            ++ (disruptingSummary (returnCheckedList model.disruptedFields))
+            ++ ". "
             ++ "They're just like "
             ++ (toString model.description) -- Airbnb
             ++ " but for "
@@ -349,12 +369,13 @@ view model =
             ++ "."
             )
           ]
-        , button [ class "btn-primary", onClick UpdateColor ]
+        , button
+          [ bgColorActivator "btn-primary" "hide", onClick UpdateColor ]
           [ text "Find your color" ]
-          , text model.color
+        , p [ bgColorActivator "answer invisible" "answer" ]
+          [ text model.color ]
         ]
       ]
 
--- add message before finding colour = Meet startup name, a revolutionary new bla bal
 -- enter to move to next question
 -- autofocus questions
